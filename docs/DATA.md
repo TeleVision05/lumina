@@ -85,6 +85,23 @@ Panoramas are cached at 1024 x 512, divided by their median luminance and stored
 (clamped at 60000); the world SH is projected from the float32 image before the clamp, so a sun too
 bright for float16 still contributes its full energy to the label.
 
+## Sample clips (`web/public/samples/`)
+
+Rendered by `uv run python -m lumina_train.clips` from **test-split** HDRIs (never trained on),
+re-downloaded at 4k from the same API (CC0, https://polyhaven.com/license) so 640 x 480 frames
+are sharp. Same camera model as training, minus JPEG (the H.264 encode replaces it): fixed white
+balance per clip, auto-exposure re-metered every frame and smoothed (EMA weight 0.15 per frame on
+log exposure), mild blur, vignetting and noise. Each `<name>.json` holds the true SH per frame
+(exposure and white balance applied, CONVENTIONS section 5) and what the shipped model predicts
+on the decoded video.
+
+| Video | HDRI | Scene | Frames | Bytes | Motion |
+|---|---|---|---|---|---|
+| `pan-outdoor-sun.mp4` | [ticknock_02](https://polyhaven.com/a/ticknock_02) | outdoor | 192 at 24 fps | 1,393,206 | slow 70 degree pan, the test split's most directional outdoor scene |
+| `pan-indoor.mp4` | [storeroom](https://polyhaven.com/a/storeroom) | indoor | 192 at 24 fps | 562,971 | slow 60 degree pan, the test split's most directional indoor scene |
+| `pan-outdoor-diffuse.mp4` | [snowy_forest_path_02](https://polyhaven.com/a/snowy_forest_path_02) | outdoor | 192 at 24 fps | 703,813 | slow 60 degree pan, the test split's least directional scene |
+| `rotate-environment.mp4` | [hochsal_field](https://polyhaven.com/a/hochsal_field) | outdoor | 240 at 24 fps | 832,531 | camera still; the environment turns 360 degrees about +Y (up) |
+
 ## HDRI ids by split
 
 ### train (792)
