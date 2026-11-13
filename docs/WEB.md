@@ -28,14 +28,14 @@ this file, run on 2026-11-13 on an Apple M2 Max while other jobs kept the load a
  grain/softness pass, onto a transparent canvas over the CSS video
 ```
 
-| Path | What |
-|---|---|
-| `web/src/capture/` | Sources (camera, files, sample clips), plain-language capture errors, preprocessing |
-| `web/src/estimators/` | The `Estimator` interface, fixed studio rig, image statistics, neural worker and client, ONNX metadata reader |
-| `web/src/lighting/` | SH maths (foundation), filter, light rig, env synthesis, colour temperature, CPU probe render |
-| `web/src/render/` | three.js stage, rigs, objects, ground, post pass, PBR shader patch, quality tier |
-| `web/src/ui/`, `web/src/styles/` | Interface |
-| `web/src/app/` | Wiring, settings, scheduler, the `?debug` test handle |
+| Path                             | What                                                                                                          |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `web/src/capture/`               | Sources (camera, files, sample clips), plain-language capture errors, preprocessing                           |
+| `web/src/estimators/`            | The `Estimator` interface, fixed studio rig, image statistics, neural worker and client, ONNX metadata reader |
+| `web/src/lighting/`              | SH maths (foundation), filter, light rig, env synthesis, colour temperature, CPU probe render                 |
+| `web/src/render/`                | three.js stage, rigs, objects, ground, post pass, PBR shader patch, quality tier                              |
+| `web/src/ui/`, `web/src/styles/` | Interface                                                                                                     |
+| `web/src/app/`                   | Wiring, settings, scheduler, the `?debug` test handle                                                         |
 
 ## How each piece works
 
@@ -53,6 +53,7 @@ Swapping R and B makes 2 of them fail (mutation check). The browser's resampling
 first step is not identical to any Python resize; see "Dropping in the trained model".
 
 **Estimators.** All implement `estimate(frame) -> {sh, direction, directionality, confidence}`.
+
 - Fixed studio: neutral key from the upper left over a cool fill; a white matte ball peaks at
   about 0.85 linear.
 - Image statistics: ambient = mean linear colour (a white ball in uniform light shows exactly
@@ -72,11 +73,11 @@ Responsiveness slider interpolates geometrically between `{0.05 Hz, beta 0.02, d
 `{2 Hz, 0.4, 1}`, end points chosen by a grid search over both measures below
 (`npx vitest run src/lighting/filter.test.ts`, seed 20261113):
 
-| Responsiveness | Full step settles within 10% (60 Hz) | Jitter kept, 5% white noise at 60 Hz |
-|---|---|---|
-| 0 (steady) | 917 ms | 5.4% |
-| 0.5 (default) | 267 ms (367 ms at 30 Hz) | 14.6% (37.2% for a 12 Hz estimate held across frames) |
-| 1 (quick) | 67 ms | 33.4% |
+| Responsiveness | Full step settles within 10% (60 Hz) | Jitter kept, 5% white noise at 60 Hz                  |
+| -------------- | ------------------------------------ | ----------------------------------------------------- |
+| 0 (steady)     | 917 ms                               | 5.4%                                                  |
+| 0.5 (default)  | 267 ms (367 ms at 30 Hz)             | 14.6% (37.2% for a 12 Hz estimate held across frames) |
+| 1 (quick)      | 67 ms                                | 33.4%                                                 |
 
 **Light rig.** `lighting/lightRig.ts`. The share of band 1 given to the DirectionalLight rises
 with directionality (smoothstep 0.06 to 0.45, at most 85%). The light's irradiance per channel is
@@ -98,12 +99,12 @@ and not at all while the matte ball is shown.
 **Measured in three.js** (`cd web && npx playwright test e2e/shading.spec.ts`, white unit sphere,
 128 px, against `shared/sphere_reference.png`, 8-bit levels):
 
-| Render | Mean abs | Max | Mean signed |
-|---|---|---|---|
-| `MeshLambertMaterial`, rig (residual probe + DirectionalLight) | 4.32 | 19 | -0.10 |
-| `MeshStandardMaterial` roughness 1, probe only | 1.16 | 4 | -1.16 |
-| same + SH env map, with `render/pbrPatch.ts` | 0.13 | 1 | +0.13 |
-| same + SH env map, unpatched (control) | 50.67 | 69 | +50.67 |
+| Render                                                         | Mean abs | Max | Mean signed |
+| -------------------------------------------------------------- | -------- | --- | ----------- |
+| `MeshLambertMaterial`, rig (residual probe + DirectionalLight) | 4.32     | 19  | -0.10       |
+| `MeshStandardMaterial` roughness 1, probe only                 | 1.16     | 4   | -1.16       |
+| same + SH env map, with `render/pbrPatch.ts`                   | 0.13     | 1   | +0.13       |
+| same + SH env map, unpatched (control)                         | 50.67    | 69  | +50.67      |
 
 The patch exists because three.js r187 adds an env map's irradiance to the probe's; it routes the
 probe irradiance through three.js's own IBL path and throws if the shader chunk changes shape.
@@ -124,20 +125,22 @@ without at half scale; `backdrop-filter` over the video took the frame interval 
 
 `cd web && npx playwright test e2e/perf.spec.ts` (software) and
 `LUMINA_GPU=1 npx playwright test e2e/perf.spec.ts` (GPU-backed headless, no window). Inference is
-the worker's `session.run` time for the 43,935-byte placeholder model; a trained model will be
-slower. Frame values are medians with p95 over about the last 2 s, after 8 s per view.
+the worker's `session.run` time for the 43,935-byte placeholder model; the table below was
+measured with that placeholder, not the trained model now shipped (6.4 MB). With the trained
+model, a headless software-rendering e2e run printed an inference median of about 10 ms (WASM,
+2026-11-13; `npm run perf` output, not re-tabulated here). Frame values are medians with p95 over about the last 2 s, after 8 s per view.
 
-| Run (load average at start) | View | Inference median / p95 | Inferences per second | Frame interval median / p95 | Main-thread work median / p95 |
-|---|---|---|---|---|---|
-| Metal GPU, WebGPU inference (56) | Lumina | 2.9 / 5.0 ms | 12.4 | 16.7 / 17.2 ms | 0.3 / 0.9 ms |
-| | Compare | 2.9 / 5.0 ms | 12.4 | 16.7 / 17.1 ms | 0.4 / 1.1 ms |
-| | Chrome ball | 3.1 / 5.9 ms | 12.5 | 16.7 / 17.6 ms | 0.4 / 3.0 ms |
-| Metal GPU, WASM inference (50) | Lumina | 0.8 / 1.9 ms | 12.4 | 16.6 / 17.6 ms | 0.4 / 1.1 ms |
-| | Compare | 0.8 / 1.3 ms | 12.5 | 16.6 / 17.8 ms | 0.4 / 1.0 ms |
-| | Chrome ball | 0.8 / 1.8 ms | 12.3 | 16.7 / 17.2 ms | 0.4 / 2.3 ms |
-| SwiftShader, WASM inference (62) | Lumina | 0.9 / 2.0 ms | 8.4 | 14.0 / 137.8 ms | 0.3 / 1.4 ms |
-| | Compare | 0.9 / 2.7 ms | 4.0 | 14.0 / 323.0 ms | 0.3 / 1.5 ms |
-| | Chrome ball | 0.8 / 2.7 ms | 3.4 | 7.9 / 799.4 ms | 0.4 / 2.8 ms |
+| Run (load average at start)      | View        | Inference median / p95 | Inferences per second | Frame interval median / p95 | Main-thread work median / p95 |
+| -------------------------------- | ----------- | ---------------------- | --------------------- | --------------------------- | ----------------------------- |
+| Metal GPU, WebGPU inference (56) | Lumina      | 2.9 / 5.0 ms           | 12.4                  | 16.7 / 17.2 ms              | 0.3 / 0.9 ms                  |
+|                                  | Compare     | 2.9 / 5.0 ms           | 12.4                  | 16.7 / 17.1 ms              | 0.4 / 1.1 ms                  |
+|                                  | Chrome ball | 3.1 / 5.9 ms           | 12.5                  | 16.7 / 17.6 ms              | 0.4 / 3.0 ms                  |
+| Metal GPU, WASM inference (50)   | Lumina      | 0.8 / 1.9 ms           | 12.4                  | 16.6 / 17.6 ms              | 0.4 / 1.1 ms                  |
+|                                  | Compare     | 0.8 / 1.3 ms           | 12.5                  | 16.6 / 17.8 ms              | 0.4 / 1.0 ms                  |
+|                                  | Chrome ball | 0.8 / 1.8 ms           | 12.3                  | 16.7 / 17.2 ms              | 0.4 / 2.3 ms                  |
+| SwiftShader, WASM inference (62) | Lumina      | 0.9 / 2.0 ms           | 8.4                   | 14.0 / 137.8 ms             | 0.3 / 1.4 ms                  |
+|                                  | Compare     | 0.9 / 2.7 ms           | 4.0                   | 14.0 / 323.0 ms             | 0.3 / 1.5 ms                  |
+|                                  | Chrome ball | 0.8 / 2.7 ms           | 3.4                   | 7.9 / 799.4 ms              | 0.4 / 2.8 ms                  |
 
 GPU renderer string: `ANGLE (Apple, ANGLE Metal Renderer: Apple M2 Max)`; software:
 `ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0)))`. Earlier SwiftShader runs the
@@ -151,20 +154,24 @@ software rendering, GPU-process stalls also delay timers, so the inference rate 
 
 ## Tests
 
-| Command | Covers |
-|---|---|
-| `npm test` | vitest: SH maths and shared vectors (foundation), filter step response and jitter, light rig energy, shadow opacity, mirroring, env map layout, CPU probe vs the Python PNG (0 levels difference), preprocessing, capture errors, estimators, ONNX metadata, scheduler, governor, shader patch, UI copy, settings |
-| `npm run e2e` | Playwright, headless Chromium, fake camera fed by `e2e/fixtures/scene.ts` (generated Y4M, no ffmpeg): foundation parity and ONNX smoke, shading measurements, app start and inference, estimator and view switching change the shading (mean colour moves about 113 levels), lamp tracking from the camera and from dropped photos, mirroring, drop event, dropped video, sample clip absence, camera denied / missing / busy / insecure page, non-media file, model 404 fallback, failed camera switch, keyboard-only flow, reduced motion, phone portrait layout, perf probe |
-| `npm run e2e:dist` | Builds, serves `dist/` under `/lumina/` with `scripts/serve-pages.mjs` (Pages-like: no SPA fallback, no custom headers) and runs every app spec against it, failing on any console error or 4xx/5xx request |
-| `LUMINA_SCREENSHOTS=1 npx playwright test e2e/screenshots.spec.ts` | Rewrites `docs/media/web-*.png` |
+| Command                                                            | Covers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm test`                                                         | vitest: SH maths and shared vectors (foundation), filter step response and jitter, light rig energy, shadow opacity, mirroring, env map layout, CPU probe vs the Python PNG (0 levels difference), preprocessing, capture errors, estimators, ONNX metadata, scheduler, governor, shader patch, UI copy, settings                                                                                                                                                                                                                                                              |
+| `npm run e2e`                                                      | Playwright, headless Chromium, fake camera fed by `e2e/fixtures/scene.ts` (generated Y4M, no ffmpeg): foundation parity and ONNX smoke, shading measurements, app start and inference, estimator and view switching change the shading (mean colour moves about 113 levels), lamp tracking from the camera and from dropped photos, mirroring, drop event, dropped video, sample clip absence, camera denied / missing / busy / insecure page, non-media file, model 404 fallback, failed camera switch, keyboard-only flow, reduced motion, phone portrait layout, perf probe |
+| `npm run e2e:dist`                                                 | Builds, serves `dist/` under `/lumina/` with `scripts/serve-pages.mjs` (Pages-like: no SPA fallback, no custom headers) and runs every app spec against it, failing on any console error or 4xx/5xx request                                                                                                                                                                                                                                                                                                                                                                    |
+| `LUMINA_SCREENSHOTS=1 npx playwright test e2e/screenshots.spec.ts` | Rewrites `docs/media/web-*.png`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 The fake camera reports no `facingMode`, like a laptop webcam, so it is shown mirrored.
 
 ## Dropping in the trained model
 
+The trained model (`placeholder = false`) is what ships as of 2026-11-13; these steps describe
+how to replace it with another.
+
 Replace `web/public/models/lumina-sh.onnx` with a model that meets the contract and has
 `lumina.placeholder = "false"`. No code changes: the placeholder note and the halved confidence
 disappear on their own. Then:
+
 1. Run `npm run e2e` and `npm run perf` (and `LUMINA_GPU=1 npm run perf`); compare WebGPU and WASM
    inference times. If WASM wins for the real model too, consider making it the default.
 2. Check the training resize against the browser's: the app resamples the 4:3 crop with
