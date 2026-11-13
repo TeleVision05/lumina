@@ -10,6 +10,7 @@ import {
   nextCameraRequest,
   openCamera,
   type CameraRequest,
+  type CameraSource,
   type FrameSource,
 } from '../capture/source';
 import { NEURAL_COPY, type NeuralStatus } from '../estimators/neural';
@@ -109,23 +110,33 @@ export class App {
     }
   }
 
-  private async setSource(open: () => Promise<FrameSource>): Promise<void> {
+  /** Show a problem where the visitor can see it: the start card, or a toast while running. */
+  private report(title: string, body: string): void {
+    if (this.source === null) this.intro.showProblem(title, body);
+    else showToast(`${title}. ${body}`);
+  }
+
+  /** Open and show a new source. Returns false (and reports the problem) when it fails. */
+  private async setSource(open: () => Promise<FrameSource>, quiet = false): Promise<boolean> {
     this.intro.clearProblem();
     this.intro.setBusy(true);
     try {
       const next = await open();
       this.stopSource();
       this.mount(next);
+      return true;
     } catch (err) {
       console.error('could not start the source', err);
+      if (quiet) return false;
       if (err instanceof CaptureError) {
         const copy = PROBLEM_COPY[err.problem];
-        this.intro.showProblem(copy.title, copy.body);
+        this.report(copy.title, copy.body);
       } else if (err instanceof MediaLoadError) {
-        this.intro.showProblem('That file did not open', err.message);
+        this.report('That file did not open', err.message);
       } else {
-        this.intro.showProblem(PROBLEM_COPY.unknown.title, PROBLEM_COPY.unknown.body);
+        this.report(PROBLEM_COPY.unknown.title, PROBLEM_COPY.unknown.body);
       }
+      return false;
     } finally {
       this.intro.setBusy(false);
     }
@@ -158,28 +169,37 @@ export class App {
     byId('start-camera', HTMLButtonElement).focus();
   }
 
-  useCamera(req: CameraRequest): Promise<void> {
+  useCamera(req: CameraRequest): Promise<boolean> {
     return this.setSource(() => openCamera(req));
   }
 
-  useSample(): Promise<void> {
+  useSample(): Promise<boolean> {
     const name = sampleClips()[0];
-    if (name === undefined) return Promise.resolve();
+    if (name === undefined) return Promise.resolve(false);
     return this.setSource(() => openVideo(sampleUrl(name), 'sample', 'Sample clip'));
   }
 
-  useFile(f: File): Promise<void> {
+  useFile(f: File): Promise<boolean> {
     return this.setSource(() => openFile(f));
   }
 
   private async switchCamera(): Promise<void> {
     const current = this.source;
     if (current?.kind !== 'camera') return;
-    const req = await nextCameraRequest(current as Parameters<typeof nextCameraRequest>[0]);
-    current.stop(); // phones cannot open two cameras at once
-    await this.useCamera(req);
-    if (this.source === null)
-      showToast('The other camera did not start. Choose Use my camera to try again.');
+    const cam = current as CameraSource;
+    const req = await nextCameraRequest(cam);
+    const back: CameraRequest = {
+      facing: cam.facing ?? 'user',
+      deviceId: cam.deviceId ?? undefined,
+    };
+    cam.stop(); // phones cannot open two cameras at once
+    if (await this.setSource(() => openCamera(req), true)) return;
+    if (await this.setSource(() => openCamera(back), true)) {
+      showToast('The other camera did not start, so Lumina went back to the one you were using.');
+      return;
+    }
+    this.stopSource();
+    this.intro.showProblem(PROBLEM_COPY.unknown.title, PROBLEM_COPY.unknown.body);
   }
 
   private async setDeviceTilt(on: boolean): Promise<void> {

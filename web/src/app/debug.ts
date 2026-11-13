@@ -2,6 +2,7 @@
  * Read-only test handle, attached only when the URL has ?debug. Playwright reads the app state
  * and samples the rendered object's pixels through it. Nothing here changes the app's behaviour.
  */
+import type { FrameSample } from '../capture/frame';
 import { rendererName } from '../render/quality';
 import type { App } from './app';
 
@@ -40,6 +41,24 @@ export interface LuminaDebugState {
   softwareRenderer: boolean;
   frameIntervalP95: number | null;
   glRenderer: string;
+  /** Brighter half of the last un-mirrored frame the estimator saw: -1 left, 1 right, 0 even. */
+  sensorBrightSide: number;
+}
+
+function brightSide(frame: FrameSample | null): number {
+  if (frame === null) return 0;
+  let left = 0;
+  let right = 0;
+  for (let y = 0; y < frame.height; y++) {
+    for (let x = 0; x < frame.width; x++) {
+      const k = (y * frame.width + x) * 4;
+      const v = (frame.rgba[k] ?? 0) + (frame.rgba[k + 1] ?? 0) + (frame.rgba[k + 2] ?? 0);
+      if (x < frame.width / 2) left += v;
+      else right += v;
+    }
+  }
+  const d = (right - left) / Math.max(right + left, 1);
+  return Math.abs(d) < 0.02 ? 0 : Math.sign(d);
 }
 
 export interface LuminaDebug {
@@ -88,6 +107,7 @@ function state(app: App): LuminaDebugState {
     softwareRenderer: app.stage.quality.software,
     frameIntervalP95: app.frameIntervals.quantile(0.95),
     glRenderer: rendererName(app.stage.renderer.getContext()),
+    sensorBrightSide: brightSide(p.lastFrame),
   };
 }
 
