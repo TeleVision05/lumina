@@ -64,10 +64,10 @@ export class ResolutionGovernor {
     this.works.push(workMs);
     if (nowMs - this.lastDecision < DECIDE_EVERY_MS) return null;
     this.lastDecision = nowMs;
-    const median = (xs: number[]): number =>
-      [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] ?? 0;
-    const cost = median(this.costs);
-    const work = median(this.works);
+    // Mean, not median: occasional long stalls (a GPU-bound frame) must count against the scale.
+    const mean = (xs: number[]): number => xs.reduce((a, b) => a + b, 0) / Math.max(xs.length, 1);
+    const cost = mean(this.costs);
+    const work = mean(this.works);
     this.costs = [];
     this.works = [];
     if (cost > SLOW_MS && this.scale > MIN_SCALE) {

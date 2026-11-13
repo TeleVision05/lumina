@@ -2,6 +2,7 @@
  * Read-only test handle, attached only when the URL has ?debug. Playwright reads the app state
  * and samples the rendered object's pixels through it. Nothing here changes the app's behaviour.
  */
+import { rendererName } from '../render/quality';
 import type { App } from './app';
 
 export interface ObjectSample {
@@ -37,6 +38,8 @@ export interface LuminaDebugState {
   objectRect: { x: number; y: number; w: number; h: number };
   renderScale: number;
   softwareRenderer: boolean;
+  frameIntervalP95: number | null;
+  glRenderer: string;
 }
 
 export interface LuminaDebug {
@@ -83,6 +86,8 @@ function state(app: App): LuminaDebugState {
     objectRect: app.stage.objectScreenRect(window.innerWidth, window.innerHeight),
     renderScale: app.stage.governor.scale,
     softwareRenderer: app.stage.quality.software,
+    frameIntervalP95: app.frameIntervals.quantile(0.95),
+    glRenderer: rendererName(app.stage.renderer.getContext()),
   };
 }
 

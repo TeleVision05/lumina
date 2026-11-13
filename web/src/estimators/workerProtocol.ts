@@ -5,8 +5,6 @@ export type Backend = 'webgpu' | 'wasm';
 export interface InitRequest {
   type: 'init';
   modelUrl: string;
-  /** URL prefix of the self-hosted ORT wasm binaries, ending in '/'. */
-  wasmBase: string;
   /** Try WebGPU first when the browser offers it. */
   preferGpu: boolean;
 }

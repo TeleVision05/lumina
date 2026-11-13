@@ -54,7 +54,6 @@ export class NeuralEstimator implements Estimator {
     this.worker.postMessage({
       type: 'init',
       modelUrl: modelUrl(),
-      wasmBase: `${import.meta.env.BASE_URL}ort/`,
       preferGpu: !new URLSearchParams(location.search).has('wasm'),
     });
   }

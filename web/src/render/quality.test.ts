@@ -41,6 +41,18 @@ describe('ResolutionGovernor', () => {
     expect(run(g, 10, 16.7, 10)).toBe(0.8);
   });
 
+  it('counts occasional long stalls even when the median frame is fast', () => {
+    const g = new ResolutionGovernor(1);
+    // 9 frames at 16.7 ms then one 150 ms stall, repeated: median is fast, mean is about 30 ms.
+    let t = 0;
+    for (let k = 0; k < 300; k++) {
+      const interval = k % 10 === 9 ? 150 : 16.7;
+      t += interval;
+      g.record(t, interval, 1);
+    }
+    expect(g.scale).toBeLessThan(1);
+  });
+
   it('climbs back only after sustained headroom, never above the maximum', () => {
     const g = new ResolutionGovernor(0.5);
     expect(run(g, 2.5, 16.7, 2)).toBe(0.5); // not yet: needs 3 s of headroom

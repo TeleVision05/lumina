@@ -16,7 +16,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "e2e:dist": "npm run build && LUMINA_E2E_TARGET=dist playwright test",
+    "perf": "playwright test e2e/perf.spec.ts",
+    "serve:dist": "node scripts/serve-pages.mjs 5181"
   },
   "dependencies": {
     "onnxruntime-web": "1.31.1",

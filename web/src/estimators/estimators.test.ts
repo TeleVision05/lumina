@@ -100,6 +100,19 @@ describe('RateGate', () => {
     expect(runs).toBeLessThanOrEqual(121);
   });
 
+  it('reaches the target rate when polled by a 10 ms timer', () => {
+    const gate = new RateGate(12);
+    let runs = 0;
+    for (let t = 0; t < 10_000; t += 10) {
+      if (gate.tryStart(t)) {
+        runs++;
+        gate.finish();
+      }
+    }
+    expect(runs).toBeGreaterThanOrEqual(118);
+    expect(runs).toBeLessThanOrEqual(126);
+  });
+
   it('never overlaps runs: a 150 ms estimator gets at most one start per 150 ms', () => {
     const gate = new RateGate(12);
     let runs = 0;

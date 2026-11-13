@@ -1,8 +1,8 @@
 /**
  * Inference worker: runs the Lumina ONNX model with onnxruntime-web off the main thread, so the
  * page never stalls. WebGPU when the browser offers an adapter, otherwise single-threaded WASM
- * (GitHub Pages cannot send the COOP/COEP headers that wasm threads need). The wasm binaries are
- * self-hosted under <base>ort/ (vite/plugins.ts); nothing is fetched from a CDN.
+ * (GitHub Pages cannot send the COOP/COEP headers that wasm threads need). The ORT wasm binaries
+ * are same-origin assets emitted by Vite (see vite/plugins.ts); nothing is fetched from a CDN.
  */
 import type { InferenceSession, Tensor } from 'onnxruntime-web';
 import { rgbaToNCHW } from '../capture/preprocess';
@@ -62,9 +62,6 @@ async function init(req: InitRequest): Promise<void> {
     : await import('onnxruntime-web/wasm');
   ort.env.wasm.numThreads = 1;
   ort.env.wasm.proxy = false;
-  ort.env.wasm.wasmPaths = {
-    wasm: `${req.wasmBase}${gpu ? 'ort-wasm-simd-threaded.asyncify.wasm' : 'ort-wasm-simd-threaded.wasm'}`,
-  };
   const res = await fetch(req.modelUrl);
   if (!res.ok) throw new Error(`model fetch ${res.status} ${req.modelUrl}`);
   const model = new Uint8Array(await res.arrayBuffer());

@@ -5,6 +5,7 @@
 
 /** Target estimator rate. The brief asks for 10 to 15 inferences per second. */
 export const TARGET_HZ = 12;
+const SLACK_MS = 5;
 
 /**
  * Starts work at most `hz` times per second and never while a previous run is in flight. If a run
@@ -18,7 +19,8 @@ export class RateGate {
 
   /** True (and marks the start) when a new run may begin at time `nowMs`. */
   tryStart(nowMs: number): boolean {
-    if (this.busy || nowMs - this.lastStart < 1000 / this.hz) return false;
+    // A few ms of slack so a poller with coarse ticks (10 ms timer) still lands on the target rate.
+    if (this.busy || nowMs - this.lastStart < 1000 / this.hz - SLACK_MS) return false;
     this.busy = true;
     this.lastStart = nowMs;
     return true;

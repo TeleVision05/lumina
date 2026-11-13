@@ -73,6 +73,11 @@ export class App {
     });
     this.resize();
     requestAnimationFrame(this.loop);
+    // The estimator is polled on a timer, not per rendered frame, so a slow frame never delays
+    // inference. The rate gate inside the pipeline keeps it at TARGET_HZ, one frame in flight.
+    window.setInterval(() => {
+      if (this.source !== null) this.pipeline.tick(performance.now(), this.source);
+    }, 10);
   }
 
   private applySettings(s: Settings): void {
@@ -205,7 +210,6 @@ export class App {
     this.lastFrame = now;
     const source = this.source;
     if (source === null) return;
-    this.pipeline.tick(now, source);
     this.renderFrame(now, source);
     const work = performance.now() - now;
     if (interval > 0) this.frameIntervals.push(interval, now);
