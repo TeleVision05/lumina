@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
-import { luminaSamples, ortRuntime } from './vite/plugins';
+import { luminaSamples, ortRuntime } from './vite/plugins.ts';
 
 // GitHub Pages serves the site at https://television05.github.io/lumina/, so every asset URL is
 // prefixed with /lumina/. Use import.meta.env.BASE_URL for runtime URLs (models, media).

@@ -1,0 +1,376 @@
+/* Stage, top bar, intro and dock. Phone portrait first; wider screens below. */
+.app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 115%, #4a4e52 0%, rgb(74 78 82 / 0%) 60%),
+    radial-gradient(90% 70% at 30% 0%, #3a3e42 0%, rgb(58 62 66 / 0%) 70%), var(--stage);
+}
+
+.media,
+.media > video,
+.media > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.media > video,
+.media > img {
+  object-fit: cover;
+}
+
+.media.is-mirrored > video,
+.media.is-mirrored > img {
+  transform: scaleX(-1);
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.scene:active {
+  cursor: grabbing;
+}
+
+.scene:focus-visible {
+  outline-offset: -6px;
+}
+
+[data-phase='intro'] .scene {
+  visibility: hidden;
+}
+
+/* Comparison divider. */
+.split {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --split: 50%;
+}
+
+.split::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--split);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--kelvin);
+  background-size: 100% 100%;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 25%);
+}
+
+.split-handle {
+  position: absolute;
+  top: 50%;
+  left: var(--split);
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border-radius: 50%;
+  background: var(--card-strong);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 35%);
+  pointer-events: auto;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.split-grip {
+  position: absolute;
+  inset: 14px;
+  border-left: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+}
+
+.split-tag {
+  position: absolute;
+  top: calc(64px + env(safe-area-inset-top));
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgb(35 39 43 / 80%);
+  color: var(--on-video);
+  font-size: var(--step--1);
+  font-weight: 500;
+}
+
+.split-tag-left {
+  right: calc(100% - var(--split) + 10px);
+}
+
+.split-tag-right {
+  left: calc(var(--split) + 10px);
+}
+
+/* Top bar. */
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(12px + env(safe-area-inset-top)) var(--gutter) 12px;
+  pointer-events: none;
+}
+
+.topbar > * {
+  pointer-events: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--on-video);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 45%);
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* The wordmark's ball is lit by the live estimate (CSS variables set by the app). */
+.brand-ball {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at var(--ball-x, 35%) var(--ball-y, 30%),
+    var(--ball-hi, #fff4e0) 0%,
+    var(--ball-mid, #a9a9a9) 48%,
+    var(--ball-lo, #2f3236) 100%
+  );
+  box-shadow: 0 1px 6px rgb(0 0 0 / 45%);
+}
+
+/* Intro. */
+.intro {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  max-width: 34rem;
+  padding: 24px;
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-panel);
+}
+
+[data-phase='running'] .intro {
+  display: none;
+}
+
+.intro-balls {
+  position: absolute;
+  top: -58px;
+  right: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.ref-ball {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  box-shadow: 0 18px 24px -12px rgb(0 0 0 / 55%);
+}
+
+.ref-grey {
+  background: radial-gradient(circle at 34% 28%, #f3e6d2 0%, #9a9a9a 45%, #3b3e41 100%);
+}
+
+.ref-chrome {
+  background:
+    radial-gradient(circle at 32% 26%, #fff 0 6%, rgb(255 255 255 / 0%) 12%),
+    linear-gradient(180deg, #e9eef5 0%, #9fb0c4 42%, #2b2f34 52%, #6d6256 78%, #c9b8a2 100%);
+}
+
+.intro h1 {
+  max-width: 22ch;
+  margin-top: 8px;
+  font-size: var(--step-3);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.intro-lede {
+  max-width: 60ch;
+  margin-top: 14px;
+  font-size: var(--step-0);
+  color: var(--ink-soft);
+}
+
+.intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.intro-note {
+  margin-top: 12px;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.problem {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--tungsten);
+  border-radius: 6px;
+  background: #fff8ec;
+}
+
+.problem-title {
+  font-size: var(--step-0);
+  font-weight: 600;
+}
+
+.problem-body {
+  margin-top: 4px;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+
+.app.is-dragging .stage::after {
+  content: 'Drop to use this picture';
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed rgb(255 255 255 / 70%);
+  border-radius: var(--radius-panel);
+  color: #fff;
+  font-size: var(--step-1);
+  background: rgb(35 39 43 / 45%);
+}
+
+/* Dock. */
+.dock {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+  padding: 8px;
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-panel);
+}
+
+.dock .segmented {
+  flex: 1 1 100%;
+}
+
+.dock .segmented label {
+  flex: 1;
+}
+
+.dock .segmented span {
+  justify-content: center;
+  width: 100%;
+}
+
+.objects {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.objects label {
+  position: relative;
+  display: inline-flex;
+}
+
+.objects input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.swatch {
+  width: 40px;
+  height: 40px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.objects input:checked + .swatch {
+  border-color: var(--ink);
+}
+
+.objects input:focus-visible + .swatch {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.swatch-matte {
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #c9c9c9 45%, #6b6e72 100%);
+}
+
+.swatch-chrome {
+  background: linear-gradient(180deg, #f2f5f9 0%, #a6b5c7 45%, #2f3338 52%, #b9a891 100%);
+}
+
+.swatch-vase {
+  background: radial-gradient(circle at 35% 28%, #b6d8dd 0%, #2b6670 38%, #0f2b31 100%);
+}
+
+.swatch-knot {
+  background: radial-gradient(circle at 35% 30%, #fff1c9 0%, #d3a24f 40%, #5a3c12 100%);
+}
+
+.dock-actions {
+  display: flex;
+  gap: 6px;
+}
+
+@media (min-width: 760px) {
+  .dock {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    flex-wrap: nowrap;
+  }
+
+  .dock .segmented {
+    flex: 0 0 auto;
+  }
+
+  .dock .segmented label {
+    flex: 0 0 auto;
+  }
+
+  .intro {
+    left: calc(var(--gutter) + 24px);
+    bottom: calc(40px + env(safe-area-inset-bottom));
+    padding: 32px;
+  }
+}

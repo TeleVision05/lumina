@@ -129,4 +129,11 @@ describe('Rolling', () => {
     r.push(1000, 10_100);
     expect(r.count).toBe(100);
   });
+
+  it('measures the rate over the recent span only, not a slow start', () => {
+    const r = new Rolling(200);
+    for (let i = 0; i < 10; i++) r.push(1, i * 1000); // 1 per second for 10 s
+    for (let i = 1; i <= 60; i++) r.push(1, 9000 + i * 50); // then 20 per second for 3 s
+    expect(r.rate()).toBeCloseTo(20, 6);
+  });
 });

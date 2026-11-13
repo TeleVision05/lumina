@@ -7,8 +7,8 @@ import { irradiance, type SH9 } from './sh';
 import { linearToSrgb8 } from './srgb';
 
 /** RGBA bytes, row 0 at the top. Outside the disc alpha is 0; the rim is anti-aliased. */
-export function renderProbe(sh: SH9, size: number, albedo = 1): Uint8ClampedArray {
-  const out = new Uint8ClampedArray(size * size * 4);
+export function renderProbe(sh: SH9, size: number, albedo = 1): Uint8ClampedArray<ArrayBuffer> {
+  const out = new Uint8ClampedArray(new ArrayBuffer(size * size * 4));
   for (let row = 0; row < size; row++) {
     for (let col = 0; col < size; col++) {
       const x = ((col + 0.5) / size) * 2 - 1;

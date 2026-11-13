@@ -64,13 +64,17 @@ export class Rolling {
     return this.quantile(0.5);
   }
 
-  /** Samples per second over the window, or null with fewer than two samples. */
-  rate(): number | null {
-    const n = this.times.length;
-    const first = this.times[0];
-    const last = this.times[n - 1];
-    if (n < 2 || first === undefined || last === undefined || last <= first) return null;
-    return ((n - 1) * 1000) / (last - first);
+  /**
+   * Samples per second over the most recent `windowMs` (default 3 s) of the window, or null with
+   * fewer than two samples in that span.
+   */
+  rate(windowMs = 3000): number | null {
+    const last = this.times[this.times.length - 1];
+    if (last === undefined) return null;
+    const recent = this.times.filter((t) => t >= last - windowMs);
+    const first = recent[0];
+    if (recent.length < 2 || first === undefined || last <= first) return null;
+    return ((recent.length - 1) * 1000) / (last - first);
   }
 
   clear(): void {
