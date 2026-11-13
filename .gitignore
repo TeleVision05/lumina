@@ -1,0 +1,29 @@
+# Downloads, caches and generated training data
+data/
+runs/
+checkpoints/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+
+# Node / web
+node_modules/
+dist/
+web/test-results/
+web/playwright-report/
+web/blob-report/
+.vite/
+*.tsbuildinfo
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

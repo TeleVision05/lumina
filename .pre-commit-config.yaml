@@ -1,0 +1,30 @@
+# Install once per clone: uv run pre-commit install
+# All hooks use the repo's pinned tool versions (.venv for Python, web/node_modules for web).
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: .venv/bin/ruff check --force-exclude
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: .venv/bin/ruff format --check --force-exclude
+        language: system
+        types: [python]
+      - id: eslint
+        name: eslint (web)
+        entry: scripts/hooks/web_tool.sh eslint --max-warnings=0 --no-warn-ignored --
+        language: system
+        files: ^web/.*\.(ts|tsx|js|mjs|cjs)$
+      - id: prettier
+        name: prettier (web)
+        entry: scripts/hooks/web_tool.sh prettier --check --ignore-unknown --
+        language: system
+        files: ^web/
+      - id: file-length
+        name: no source file over 500 lines
+        entry: .venv/bin/python scripts/hooks/check_file_length.py --max 500
+        language: system
+        files: ^(training|web/src|web/tests|web/e2e|scripts)/

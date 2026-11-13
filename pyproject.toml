@@ -1,0 +1,51 @@
+[project]
+name = "lumina-train"
+version = "0.1.0"
+description = "Training, evaluation and export for Lumina's camera-to-lighting (SH9) network."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.1",
+    "torch>=2.9",
+    "torchvision>=0.24",
+    "opencv-python-headless>=4.10",
+    "onnx>=1.17",
+    "onnxscript>=0.5",
+    "onnxruntime>=1.20,<1.32",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.14",
+    "pre-commit>=4.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["training/lumina_train"]
+
+[tool.uv]
+# Reproducible resolution: ignore anything published after this instant.
+exclude-newer = "2026-10-30T00:00:00Z"
+
+[tool.pytest.ini_options]
+testpaths = ["training/tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["training"]
+extend-exclude = ["web", "data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "ANN", "RUF"]
+ignore = ["ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"training/tests/**" = ["ANN"]
