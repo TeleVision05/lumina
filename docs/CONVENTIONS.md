@@ -119,6 +119,17 @@ specular; the size of that difference is UNVERIFIED (not measured). Re-run the p
 before claiming a match. Tone mapping (ACES, AgX) changes the pixels by design and is not part of this
 contract.
 
+**Corrected 2026-11-13 (web engineer): now measured.** `cd web && npx playwright test
+e2e/shading.spec.ts` renders the same reference sphere with `MeshStandardMaterial` (white,
+roughness 1, metalness 0) under the same probe: mean signed difference **-1.16** 8-bit levels, mean
+absolute 1.16, max 4 (three 0.187.0, SwiftShader). With an environment map synthesised from the same
+SH, three.js adds the map's irradiance to the probe's (read from the r187 shader chunks
+`lights_fragment_maps` and `lights_fragment_end`): **+50.67** levels, light counted twice. The app
+therefore routes the probe irradiance through three.js's IBL path instead
+(`web/src/render/pbrPatch.ts`), which measures **+0.13** (max 1). The same spec checks the app's light
+rig (residual probe + derived `DirectionalLight`, `web/src/lighting/lightRig.ts`) at mean 4.32, max
+19 levels, the expected band-2 truncation of a delta light.
+
 ## 4. Panoramas and labels (training side)
 
 Equirectangular panoramas use the three.js equirect mapping in a right-handed, +Y-up world frame:
@@ -236,4 +247,5 @@ Reproduce every number in this section: `uv run python -m lumina_train.worked_ex
 | Labels from the panorama without rotating into the camera frame | network learns world-frame light | direction ignores where the camera points |
 | Video pixels fed as linear values | input contract says sRGB-encoded 0..1 | systematic brightness and contrast error |
 | `cv2.imwrite` on an RGB array | file stored as BGR | colour cast swapped (pytest guards the reference PNG) |
-| `MeshStandardMaterial` compared against the Lambert reference | diffuse scaled by `1 - single - multi` scattering, plus specular | a mismatch of UNVERIFIED size |
+| `MeshStandardMaterial` compared against the Lambert reference | diffuse scaled by `1 - single - multi` scattering, plus specular | a mismatch of UNVERIFIED size; corrected 2026-11-13: measured -1.16 levels mean (section 3) |
+| An env map built from the same SH on a `MeshStandardMaterial`, unpatched | three.js adds env irradiance to the probe's | +50.67 levels, light counted twice (section 3) |
