@@ -2,14 +2,248 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="description"
+      content="Lumina estimates the lighting of a real room from the camera, in real time, and lights a virtual object to match."
+    />
     <title>Lumina</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.35' cy='.3' r='.8'%3E%3Cstop offset='0' stop-color='%23fff4e0'/%3E%3Cstop offset='.55' stop-color='%23a9a9a9'/%3E%3Cstop offset='1' stop-color='%23323538'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E"
+    />
   </head>
   <body>
-    <main id="app">
-      <h1>Lumina</h1>
-      <p>Real-time lighting estimation for browser AR. The demo is under construction.</p>
-    </main>
+    <div class="app" id="app" data-phase="intro">
+      <div class="stage" id="stage">
+        <div class="media" id="media"></div>
+        <canvas
+          id="scene"
+          class="scene"
+          tabindex="0"
+          aria-label="Virtual object over the video. Drag to move it, scroll or pinch to resize. With the keyboard: arrow keys move, plus and minus resize."
+        ></canvas>
+        <div class="split" id="split" hidden>
+          <span class="split-tag split-tag-left">Fixed studio light</span>
+          <span class="split-tag split-tag-right">Lumina</span>
+          <div
+            class="split-handle"
+            id="split-handle"
+            role="slider"
+            tabindex="0"
+            aria-label="Comparison divider"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="50"
+            aria-valuetext="Half fixed light, half Lumina"
+          >
+            <span class="split-grip" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-ball" aria-hidden="true"></span>
+          <span class="brand-name">Lumina</span>
+        </div>
+        <button type="button" class="link-button" id="how-open">How it works</button>
+      </header>
+
+      <section class="intro" id="intro" aria-labelledby="intro-title">
+        <div class="intro-balls" aria-hidden="true">
+          <span class="ref-ball ref-grey"></span>
+          <span class="ref-ball ref-chrome"></span>
+        </div>
+        <h1 id="intro-title">Light a virtual object with the light in your room.</h1>
+        <p class="intro-lede">
+          Lumina reads your camera picture, works out where the light comes from and what colour it
+          is, and lights a 3D object to match, live. Everything runs in this browser tab; your video
+          stays on this device.
+        </p>
+        <div class="intro-actions">
+          <button type="button" class="button button-primary" id="start-camera">
+            Use my camera
+          </button>
+          <button type="button" class="button" id="start-sample">Play the sample clip</button>
+          <label class="button" for="file-input">Open a photo or video</label>
+          <input type="file" id="file-input" class="visually-hidden" accept="image/*,video/*" />
+        </div>
+        <p class="intro-note" id="intro-note">Or drop an image or video anywhere on this page.</p>
+        <div class="problem" id="problem" role="alert" hidden>
+          <h2 class="problem-title" id="problem-title"></h2>
+          <p class="problem-body" id="problem-body"></p>
+        </div>
+      </section>
+
+      <aside class="reading" id="reading" aria-label="Light reading" hidden>
+        <div class="reading-head">
+          <div class="reading-probe">
+            <canvas id="probe" width="96" height="96" aria-hidden="true"></canvas>
+            <svg class="reading-arrow" viewBox="-50 -50 100 100" aria-hidden="true">
+              <line id="arrow-line" x1="0" y1="0" x2="0" y2="0" />
+              <circle id="arrow-tip" cx="0" cy="0" r="5" />
+            </svg>
+          </div>
+          <div class="reading-summary">
+            <p class="reading-direction" id="reading-direction">Waiting for a picture</p>
+            <p class="reading-quality" id="reading-quality"></p>
+          </div>
+          <button
+            type="button"
+            class="icon-button reading-expand"
+            id="reading-expand"
+            aria-expanded="false"
+            aria-controls="reading"
+          >
+            Details
+          </button>
+        </div>
+        <div class="kelvin" aria-label="Colour temperature">
+          <div class="kelvin-scale" aria-hidden="true">
+            <span class="kelvin-marker" id="kelvin-marker"></span>
+          </div>
+          <p class="kelvin-value">
+            <span id="kelvin-value">–</span> <span class="kelvin-ends">warm to cool</span>
+          </p>
+        </div>
+        <dl class="reading-stats">
+          <div>
+            <dt>Confidence</dt>
+            <dd id="stat-confidence">–</dd>
+          </div>
+          <div>
+            <dt>Inference</dt>
+            <dd id="stat-inference">–</dd>
+          </div>
+          <div>
+            <dt>Frame rate</dt>
+            <dd id="stat-fps">–</dd>
+          </div>
+        </dl>
+        <p class="reading-label" id="estimator-label">Lumina reads the light with</p>
+        <fieldset
+          class="segmented segmented-small"
+          id="estimator-group"
+          aria-labelledby="estimator-label"
+        >
+          <label
+            ><input type="radio" name="estimator" value="neural" checked /><span
+              >Neural network</span
+            ></label
+          >
+          <label
+            ><input type="radio" name="estimator" value="stats" /><span
+              >Image statistics</span
+            ></label
+          >
+        </fieldset>
+        <p class="reading-note" id="reading-note" hidden></p>
+      </aside>
+
+      <nav class="dock" id="dock" aria-label="Controls" hidden>
+        <fieldset class="segmented" id="view-group">
+          <legend class="visually-hidden">Lighting shown</legend>
+          <label><input type="radio" name="view" value="fixed" /><span>Fixed light</span></label>
+          <label
+            ><input type="radio" name="view" value="split" checked /><span>Compare</span></label
+          >
+          <label><input type="radio" name="view" value="lumina" /><span>Lumina</span></label>
+        </fieldset>
+        <fieldset class="objects" id="object-group">
+          <legend class="visually-hidden">Object</legend>
+          <label title="Matte ball"
+            ><input type="radio" name="object" value="matte" checked /><span
+              class="swatch swatch-matte"
+              aria-hidden="true"
+            ></span
+            ><span class="visually-hidden">Matte ball</span></label
+          >
+          <label title="Chrome ball"
+            ><input type="radio" name="object" value="chrome" /><span
+              class="swatch swatch-chrome"
+              aria-hidden="true"
+            ></span
+            ><span class="visually-hidden">Chrome ball</span></label
+          >
+          <label title="Glazed vase"
+            ><input type="radio" name="object" value="vase" /><span
+              class="swatch swatch-vase"
+              aria-hidden="true"
+            ></span
+            ><span class="visually-hidden">Glazed vase</span></label
+          >
+          <label title="Brass knot"
+            ><input type="radio" name="object" value="knot" /><span
+              class="swatch swatch-knot"
+              aria-hidden="true"
+            ></span
+            ><span class="visually-hidden">Brass knot</span></label
+          >
+        </fieldset>
+        <div class="dock-actions">
+          <button type="button" class="icon-button" id="switch-camera" hidden>Switch camera</button>
+          <button type="button" class="icon-button" id="change-source">Change source</button>
+          <button
+            type="button"
+            class="icon-button"
+            id="settings-toggle"
+            aria-expanded="false"
+            aria-controls="settings"
+          >
+            Adjust
+          </button>
+        </div>
+      </nav>
+
+      <section class="settings" id="settings" aria-label="Adjustments" hidden>
+        <label class="range"
+          ><span>Responsiveness</span
+          ><input
+            type="range"
+            id="set-responsiveness"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.5"
+          /><span class="range-ends"><span>Steady</span><span>Quick</span></span></label
+        >
+        <label class="range"
+          ><span>Shadow strength</span
+          ><input type="range" id="set-shadow" min="0" max="1" step="0.01" value="0.85"
+        /></label>
+        <label class="range"
+          ><span>Ground tilt</span
+          ><input type="range" id="set-tilt" min="-10" max="60" step="1" value="15"
+        /></label>
+        <label class="check"
+          ><input type="checkbox" id="set-device-tilt" /><span>Follow the phone’s tilt</span></label
+        >
+        <label class="range"
+          ><span>Film grain</span
+          ><input type="range" id="set-grain" min="0" max="1" step="0.01" value="0.35"
+        /></label>
+        <label class="range"
+          ><span>Softness</span
+          ><input type="range" id="set-blur" min="0" max="1" step="0.01" value="0.4"
+        /></label>
+        <label class="check"
+          ><input type="checkbox" id="set-env-camera" checked /><span
+            >Reflect the camera picture</span
+          ></label
+        >
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+      <dialog class="how" id="how" aria-labelledby="how-title">
+        <div class="how-body" id="how-body"></div>
+        <form method="dialog">
+          <button type="submit" class="button" id="how-close">Close</button>
+        </form>
+      </dialog>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

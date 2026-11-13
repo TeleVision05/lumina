@@ -1,0 +1,285 @@
+/* The light reading card, adjustments, toast and the how-it-works dialog. */
+.reading {
+  position: absolute;
+  top: calc(60px + env(safe-area-inset-top));
+  right: var(--gutter);
+  width: min(264px, calc(100vw - 2 * var(--gutter)));
+  padding: 14px;
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-panel);
+  font-size: var(--step--1);
+}
+
+.reading-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.reading-probe {
+  position: relative;
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  background: var(--grey18);
+}
+
+.reading-probe canvas {
+  position: absolute;
+  inset: 6px;
+  width: 60px;
+  height: 60px;
+}
+
+.reading-arrow {
+  position: absolute;
+  inset: 0;
+  width: 72px;
+  height: 72px;
+  overflow: visible;
+}
+
+.reading-arrow line {
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.reading-arrow circle {
+  fill: var(--tungsten);
+  stroke: #fff;
+  stroke-width: 2;
+}
+
+.reading-arrow circle.is-behind {
+  fill: transparent;
+}
+
+.reading-direction {
+  font-size: var(--step-0);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.reading-quality {
+  margin-top: 2px;
+  color: var(--ink-soft);
+}
+
+.kelvin {
+  margin-top: 14px;
+}
+
+.kelvin-scale {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--kelvin);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.kelvin-marker {
+  position: absolute;
+  top: -4px;
+  left: var(--k, 50%);
+  width: 4px;
+  height: 16px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px var(--card);
+}
+
+.kelvin-value {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.kelvin-ends {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.reading-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.reading-stats dt {
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+.reading-stats dd {
+  margin: 2px 0 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.reading-label {
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+}
+
+.reading .segmented {
+  display: flex;
+}
+
+.reading .segmented label {
+  flex: 1;
+}
+
+.reading .segmented span {
+  justify-content: center;
+  width: 100%;
+}
+
+.reading-note {
+  margin-top: 10px;
+  color: var(--ink-soft);
+}
+
+/* Phone portrait: the card becomes a compact strip; tap the probe to expand. */
+@media (max-width: 759px) {
+  .reading {
+    top: calc(58px + env(safe-area-inset-top));
+    left: var(--gutter);
+    right: var(--gutter);
+    width: auto;
+    padding: 10px;
+  }
+
+  .reading:not(.is-open) .kelvin,
+  .reading:not(.is-open) .reading-stats,
+  .reading:not(.is-open) .segmented,
+  .reading:not(.is-open) .reading-label,
+  .reading:not(.is-open) .reading-note {
+    display: none;
+  }
+
+  .reading-probe,
+  .reading-arrow {
+    width: 56px;
+    height: 56px;
+  }
+
+  .reading-probe canvas {
+    inset: 5px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .split-tag {
+    top: calc(140px + env(safe-area-inset-top));
+  }
+}
+
+.reading-expand {
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+@media (min-width: 760px) {
+  .reading-expand {
+    display: none;
+  }
+}
+
+/* Adjustments. */
+.settings {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(150px + env(safe-area-inset-bottom));
+  display: grid;
+  gap: 12px;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: var(--radius-panel);
+  background: var(--card);
+  box-shadow: var(--shadow-panel);
+}
+
+@media (min-width: 760px) {
+  .settings {
+    left: 50%;
+    right: auto;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    width: 320px;
+    transform: translateX(-50%);
+  }
+}
+
+/* Toast. */
+.toast {
+  position: absolute;
+  left: 50%;
+  top: calc(16px + env(safe-area-inset-top));
+  max-width: min(36rem, calc(100vw - 2 * var(--gutter)));
+  padding: 12px 16px;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: #fff;
+  font-size: var(--step--1);
+  transform: translateX(-50%);
+  box-shadow: var(--shadow-panel);
+  z-index: 5;
+}
+
+/* How it works. */
+.how {
+  width: min(40rem, calc(100vw - 2 * var(--gutter)));
+  max-height: calc(100vh - 48px);
+  padding: 28px;
+  border: 0;
+  border-radius: var(--radius-panel);
+  background: var(--card-strong);
+  color: var(--ink);
+  box-shadow: var(--shadow-panel);
+}
+
+.how::backdrop {
+  background: rgb(20 22 24 / 60%);
+}
+
+.how h2 {
+  margin: 0 0 10px;
+  font-size: var(--step-1);
+  font-weight: 600;
+}
+
+.how h2:not(:first-child) {
+  margin-top: 22px;
+}
+
+.how p,
+.how li {
+  max-width: 64ch;
+  font-size: var(--step-0);
+  color: var(--ink-soft);
+}
+
+.how ol,
+.how ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.how li + li {
+  margin-top: 6px;
+}
+
+.how form {
+  margin-top: 22px;
+}
