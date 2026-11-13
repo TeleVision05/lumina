@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "command": "uv run python -m lumina_train.clips",
+  "license": "rendered from CC0 Poly Haven HDRIs; see docs/DATA.md",
+  "clips": [
+    {
+      "video": "pan-outdoor-sun.mp4",
+      "bytes": 1393206,
+      "fps": 24,
+      "frames": 192,
+      "vfov_deg": 60.0,
+      "truth": "pan-outdoor-sun.json",
+      "description": "slow 70 degree pan, the test split's most directional outdoor scene",
+      "hdri": "ticknock_02",
+      "environment": "outdoor"
+    },
+    {
+      "video": "pan-indoor.mp4",
+      "bytes": 562971,
+      "fps": 24,
+      "frames": 192,
+      "vfov_deg": 62.0,
+      "truth": "pan-indoor.json",
+      "description": "slow 60 degree pan, the test split's most directional indoor scene",
+      "hdri": "storeroom",
+      "environment": "indoor"
+    },
+    {
+      "video": "pan-outdoor-diffuse.mp4",
+      "bytes": 703813,
+      "fps": 24,
+      "frames": 192,
+      "vfov_deg": 58.0,
+      "truth": "pan-outdoor-diffuse.json",
+      "description": "slow 60 degree pan, the test split's least directional scene",
+      "hdri": "snowy_forest_path_02",
+      "environment": "outdoor"
+    },
+    {
+      "video": "rotate-environment.mp4",
+      "bytes": 832531,
+      "fps": 24,
+      "frames": 240,
+      "vfov_deg": 60.0,
+      "truth": "rotate-environment.json",
+      "description": "camera still; the environment turns 360 degrees about +Y (up)",
+      "hdri": "hochsal_field",
+      "environment": "outdoor"
+    }
+  ]
+}

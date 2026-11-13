@@ -1,0 +1,5263 @@
+{
+ "schema": 1,
+ "seed": 20261113,
+ "method": "group by GPS (0.01 deg) or id stem, seeded shuffle, greedy 80/10/10 per env",
+ "groups": 551,
+ "counts": {
+  "train": {
+   "total": 792,
+   "indoor": 219,
+   "outdoor": 573
+  },
+  "val": {
+   "total": 102,
+   "indoor": 28,
+   "outdoor": 74
+  },
+  "test": {
+   "total": 103,
+   "indoor": 31,
+   "outdoor": 72
+  },
+  "ood": {
+   "total": 48,
+   "indoor": 23,
+   "outdoor": 25
+  }
+ },
+ "splits": {
+  "train": [
+   {
+    "id": "aarfontein_dawn_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aarfontein_dirt_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aarfontein_dusk",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aarfontein_pan",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aarfontein_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_bakery",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_church",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_factory_canteen_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_factory_canteen_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_games_room_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_games_room_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_garage",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_greenhouse",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_hall_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_hopper_terminal_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_hopper_terminal_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_hopper_terminal_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_hopper_terminal_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_parking",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_pathway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_slipway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tank_farm_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tank_farm_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tank_farm_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tank_farm_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tank_farm_05",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "abandoned_tiled_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "abandoned_workshop_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "acoustical_shell",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "adams_place_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aerodynamics_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "afrikaans_church_exterior",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "afrikaans_church_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "aft_lounge",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ahornsteig",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "air_museum_playground",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aircraft_workshop_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "aloe_farm_shade_house",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "altanka",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "alte_veste_station",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "amphitheatre_zanzibar_fort",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "anniversary_lounge",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "approaching_storm",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "arboretum",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aristea_wreck",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aristea_wreck_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "art_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "artist_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "auto_service",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "autoshop_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "autumn_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_field_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_forest_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_forest_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_forest_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_forest_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_hill_view",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_hilly_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_hockey",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aviation_museum",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "aviation_museum_hill",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "balcony",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ballawley_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ballroom",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "bambanani_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bamboo_tunnel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bank_vault",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "barnaslingan_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "barnaslingan_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "basement_boxing_ring",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "bathroom",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "beach_cloudy_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "beach_parking",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "belfast_farmhouse",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "belfast_open_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "belfast_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "belfast_sunset_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bell_park_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bell_park_pier",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bell_tower",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "belvedere",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bergen",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bethnal_green_entrance",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "billiard_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "birbeck_street_underpass",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "birchwood",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bismarckturm",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bismarckturm_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blau_river",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blaubeuren_church_square",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blaubeuren_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blaubeuren_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blaubeuren_outskirts",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blender_institute",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "blinds",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "blocky_photo_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "bloem_field_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_hill_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_hill_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_hill_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_olive_house",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_train_track_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bloem_train_track_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blouberg_sunrise_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blouberg_sunrise_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blue_photo_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "boiler_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "boma",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "borghese_gardens",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "braustuble_alley",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "brick_factory_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "brick_factory_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "buikslotermeerplein",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "burnt_warehouse",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "bush_restaurant",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cabin",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cambridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "camdeboo_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "canary_wharf",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cannon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cape_hill",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "carpentry_shop_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "carpentry_shop_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "castle_zavelstein_cellar",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cayley_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cedar_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cedar_bridge_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cedar_bridge_sunset_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cedar_bridge_sunset_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "champagne_castle_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "chapel_day",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "chapmans_drive",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "charolettenbrunn_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "childrens_hospital",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "chinese_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "christmas_photo_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "christmas_photo_studio_07",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "church_meeting_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "church_museum",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "church_stairway",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cinema_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cinema_lobby",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "circus_arena",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "citrus_orchard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "citrus_orchard_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "citrus_orchard_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "citrus_orchard_road_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "clarens_midday",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "clarens_night_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "clarens_night_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "climbing_gym",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cloud_layers",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cloudy_cliffside_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cloudy_netted_nursery",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cloudy_vondelpark",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cobblestone_parish_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cobblestone_street_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "colorful_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "colosseum",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "combination_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "comfy_cafe",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "concrete_tunnel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "concrete_tunnel_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "construction_yard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "country_club",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "countrytrax_midday",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "courtyard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "courtyard_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cowboy_town_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cowboy_town_saloon",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "creepy_bathroom",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "crossfit_gym",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "crystal_falls",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dam_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dam_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dam_wall",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dancing_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "dark_autumn_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "de_balie",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "delta_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_airfield_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_airfield_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_highway_midday",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_highway_noon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_overpass",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "derelict_underpass",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dirt_bike_track_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "distribution_board",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "docklands_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "docklands_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "donkin_reserve",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "drachenfels_cellar",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "drackenstein_quarry",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "drackenstein_quarry_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dreifaltigkeitsberg",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dresden_moat",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dresden_square",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dresden_station_night",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "driving_school",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dry_cracked_lake",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dry_hay_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dry_meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dusseldorf_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ehingen_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ehingen_hillside_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "eilenriede_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "emmarentia",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "empty_play_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "empty_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "en_suite",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "entrance_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "epping_forest_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "epping_forest_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "etzwihl",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "evening_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "evening_museum_courtyard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "evening_road_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "evening_road_01_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "events_hall_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "factory_yard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "farm_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "farm_field_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "farm_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "farm_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "felsenlabyrinth",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ferndale_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_07",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_08",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_09",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_10",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_11",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ferndale_studio_12",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "fireplace",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "fish_eagle_hill",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fish_hoek_beach",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "flamingo_pan",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "floral_tent",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "flower_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "flower_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "forest_cave",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "forest_grove",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "forest_slope",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "forgotten_miniland",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fort_schanskop_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fouriesburg_mountain_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fouriesburg_mountain_lookout",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fouriesburg_mountain_lookout_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "fouriesburg_mountain_midday",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "freight_station",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "frozen_lake",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "furry_clouds",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "furstenstein",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "future_parking",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "garage",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "garden_nook",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gear_store",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "georgentor",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "glass_passage",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "glasshouse_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "glencairn_expressway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "goegap",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "goegap_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "golden_bay",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gothic_manor_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gothic_manor_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "graaff_reinet_groote_kerk",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "grasslands_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "graveyard_pathways",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gray_pier",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "green_point_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "green_sanctuary",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gum_trees",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gym_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hall_of_mammals",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hamburg_canal",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hamburg_hbf",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hangar_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hanger_exterior_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hansaplatz",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "harties",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hausdorf_clear_sky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hayloft",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "herkulessaulen",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "highway_bridge_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hilltop_construction",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hilly_terrain_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hilly_terrain_01_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "historic_cloister_passage",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hochsal_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hospital_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hospital_room_2",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hotel_rooftop_balcony",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hotel_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "illovo_beach_balcony",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "immenstadter_horn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "indoor_pool",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "industrial_pipe_and_valve_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "industrial_pipe_and_valve_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "industrial_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "industrial_sunset_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "industrial_sunset_02_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "industrial_sunset_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "industrial_workshop_foundry",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "interior_construction",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "irish_institute",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "je_gray_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kart_club",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "kiara_1_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_2_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_3_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_4_mid-morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_5_noon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_6_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_7_late-afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_8_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_9_dusk",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kiara_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "killesberg_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "klippad_dawn_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "klippad_dawn_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "klippad_sunrise_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "klippad_sunrise_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloetzle_blei",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_28d_misty",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_28d_misty_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_38d_partly_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_38d_partly_cloudy_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_43d_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_43d_clear_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_48d_partly_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_48d_partly_cloudy_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_misty_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_misty_morning_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_overcast",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloofendal_overcast_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_01_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_02_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_03_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_05",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_05_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_06",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_06_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_07",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "kloppenheim_07_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "konzerthaus",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ladybrand_heritage_house",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lago_disola",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lake_pier",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lakes",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "large_corridor",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "laufenurg_church",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lauter_waterfall",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "learner_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lebombo",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "leibstadt",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lenong_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lenong_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lenong_3",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lilienstein",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "limehouse",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "little_paris_eiffel_tower",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "little_paris_under_tower",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lonely_road_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lonely_road_afternoon_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ludwikowice_farmland",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lush_dirt_path",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lythwood_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "machine_shop_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "machine_shop_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "machine_shop_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "magalies_field_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "malagas_ferry_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mall_parking_lot",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mealie_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "medieval_cafe",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "metro_noord",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "metro_vijzelgracht",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "minedump_flats",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mirrored_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "missile_launch_facility_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "missile_launch_facility_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "missile_launch_facility_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "misty_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "misty_farm_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "misty_pines",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "modern_bathroom",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "modern_buildings",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "modern_buildings_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "modern_buildings_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "modern_evening_street",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "monks_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "monkstown_castle",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "monochrome_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "monochrome_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "monochrome_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "monochrome_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "monte_scherbelino",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "montorfano",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "moon_lab",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "moonless_golf",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "moonlit_golf",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mosaic_tunnel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mossy_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "moulton_falls_train_tunnel_east",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "moulton_station_train_tunnel_west",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mpumalanga_veld",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mpumalanga_veld_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mud_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mud_road_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "muddy_autumn_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "museum_of_ethnography",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "museum_of_history",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "museumplein",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "music_hall_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "music_hall_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "nagoya_wall_path",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "nature_reserve_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "near_the_river_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "near_the_river_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "netball_court",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "neurathen_rock_castle",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "newman_cafeteria",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "newman_lobby",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "newman_locker_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "niederwihl_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "night_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ninomaru_teien",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "nkuhlu",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "noga",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "noon_grass",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "northcliff",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "nowhere_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "nqweba_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "old_apartments_walkway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "old_bus_depot",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "old_depot",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "old_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "old_outdoor_theater",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "old_quarry_gerlingen",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "old_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "orbita",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "orlando_stadium",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ostrich_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ouchy_pier",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "outdoor_chapel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "outdoor_umbrellas",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "overcast_industrial_courtyard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "overcast_soil",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "overcast_soil_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "overcast_soil_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "palermo_sidewalk",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "parched_canal",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "park_bench",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "park_music_stage",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "park_parking",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "parking_garage",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "partial_eclipse",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "passendorf_snow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pathway_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "paul_lobe_haus",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pav_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pav_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pav_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "penguin_museum",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "peppermint_powerplant",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "peppermint_powerplant_2",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "petit_port",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "phalzer_forest_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "phone_shop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "photo_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "photo_studio_loft_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "photo_studio_london_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "piazza_martin_lutero",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pillars",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pine_attic",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pine_picnic",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pink_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pisztyk",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pizzo_pernice",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pizzo_pernice_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "plac_wolnosci",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "plains_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pond",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pond_bridge_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pool",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "poolbeg",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "potsdamer_platz",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "preller_drive",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pretoria_gardens",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pretville_cinema",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pretville_street",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "promenade_de_vidy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pump_house",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "pump_station",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pylons",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quadrangle_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quadrangle_sunny",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quattro_canti",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_afternoon_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dawn_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dusk_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dusk_1_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dusk_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_dusk_2_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_late_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_late_afternoon_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_mid_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_mid_morning_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_moon_noon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_moon_noon_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_moonrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_moonrise_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_morning_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_night_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_noon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_noon_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_patio",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_sunrise_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "qwantani_sunset_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "radkow_lake",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "railway_bridges",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rainforest_trail",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rathaus",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "reading_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "red_hill_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "red_hill_curve",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "red_hill_straight",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "red_wall",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "reichstag_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "reinforced_concrete_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "reinforced_concrete_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "relax_inn_seaview_suite",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "rhodes_memorial",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "river_alcove",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "river_rocks",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "river_walk_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "river_walk_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rocky_ridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rocky_ridge_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rogland_clear_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rogland_moonlit_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rogland_overcast",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rogland_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rolling_hills",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "roof_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rooftop_day",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rooftop_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rooitou_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rosendal_mountain_midmorning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rosendal_park_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rosendal_park_sunset_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rosendal_plains_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rosendal_plains_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rostock_arches",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "rostock_laage_airport",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "round_platform",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "royal_esplanade",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "ruckenkreuz",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_crossroads",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_evening_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_graffiti_tower",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_landscape",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_winter_roadside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rustig_koppie",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rustig_koppie_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sabie_tent",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "safari_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "san_giuseppe_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sandsloot",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "satara_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "satara_night_no_lamps",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "schachen_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "schadowplatz",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "school_quad",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "sculpture_exhibition",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "scythian_tombs",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "scythian_tombs_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "scythian_tombs_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "secluded_beach",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sepulchral_chapel_basement",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "sepulchral_chapel_rotunda",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "shady_patch",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "shanghai_bund",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "shudu_lake",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "signal_hill_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "signal_hill_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "simons_town_harbour",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "simons_town_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "skate_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "skidpan",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "skukuza_golf",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "skylit_garage",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_cave",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_empty_house",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_empty_room_1",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_empty_room_2",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_empty_room_3",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_empty_room_4",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_hangar_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_hangar_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_harbor_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_harbor_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_harbour_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_harbour_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_rural_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_rural_road_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "snow_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snow_field_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snow_field_2_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snow_field_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_hillside_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_park_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "soliltude",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "solitude_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "solitude_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spaichingen_hill",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spiaggia_di_mondello",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spooky_bamboo_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spree_bank",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "squash_court",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "st_fagans_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "st_peters_square_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stadium_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stadium_exterior",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sterkspruit_falls",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stierberg_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stone_pines",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "story_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "story_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "story_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "story_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "story_studio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "straw_rolls_field_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "street_lamp",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "studio_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "studio_kominka_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kominka_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kominka_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kominka_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kontrast_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kontrast_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kontrast_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_kontrast_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_07",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_08",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_small_09",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_wizja_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_wizja_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "studio_wizja_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "stuttgart_hillside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stuttgart_suburbs",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "suburban_field_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "suburban_field_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "suburban_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "suburban_parking_area",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "subway_entrance",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "summer_stage_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "summer_stage_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunflowers",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunflowers_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunny_rose_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunny_vondelpark",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunset_fairway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunset_jhbcentral",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunset_meadow_path",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_0d_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_0d_clear_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_18d_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_18d_clear_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_1d_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_1d_clear_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_6d_clear",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "syferfontein_6d_clear_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "symmetrical_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "symmetrical_garden_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "table_mountain_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "table_mountain_1_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "table_mountain_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "table_mountain_2_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tears_of_steel_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "teatro_massimo",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "teutonic_castle_moat",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "the_lost_city",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "the_sky_is_on_fire",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "theater_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "theater_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "tief_etz",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tiergarten",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "toposcope_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tree_lined_driveway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "treetop_balcony",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "trekker_monument",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "tucker_wreck",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "turning_area",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tv_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "twilight_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "umhlanga_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "unfinished_office",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "unfinished_office_night",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "university_workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "urban_alley_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_courtyard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_courtyard_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_street_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_street_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_street_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "urban_street_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ushaka_dolphin_stadium",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ushaka_sea_world_aquarium",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "valley_of_desolation",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "vatican_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "venetian_crossroads",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "veranda",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "versveldpas",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "vestibule",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "victoria_curve_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "victoria_curve_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "victoria_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "vignaioli",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "vignaioli_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "vintage_measuring_lab",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "voortrekker_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "vulture_hide",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "warm_bar",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "warm_reception_dinner",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "warm_restaurant",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "warm_restaurant_night",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wasteland_clouds",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "wasteland_clouds_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "waterbuck_trail",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "waterkloof_farm",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "whale_skeleton",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_chapel",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_cliff_top",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "white_home_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wide_street_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "wide_street_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "wildflower_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "winter_evening",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "winter_lake_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "winter_orchard",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "winter_river",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "winter_sky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "witsand_woolshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wobbly_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "wooden_motel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "woods",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "workshop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wrestling_gym",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "xiequ_yuan",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "yaris_interior_garage",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "yellow_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "yoga_room",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "zavelstein",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zawiszy_czarnego",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zhengyang_gate",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwinger_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   }
+  ],
+  "val": [
+   {
+    "id": "abandoned_waterworks",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "alps_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_crossing",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_ground",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "autumn_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blue_grotto",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "bryanston_park_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "castel_st_angelo_roof",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cave_wall",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cayley_lookout",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "circus_maximus_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "circus_maximus_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "cliffside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "crosswalk",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dalkey_view",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "debris_basement_corridor",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "decor_shop",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "dikhololo_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dikhololo_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "drakensberg_solitary_mountain",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "drakensberg_solitary_mountain_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "dry_orchard_meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "eilenriede_labyrinth",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "empty_warehouse_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "geislingen_an_der_steige",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "german_town_street",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "golden_gate_hills",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "graffiti_shelter",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hausdorf_meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hay_bales",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hikers_cave",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "homecoming_center_rooftop",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "industrial_wooden_attic",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "je_gray_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "konigsallee",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "limpopo_golf_course",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lot_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lot_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lythwood_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lythwood_lounge",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "lythwood_terrace",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "narrow_moonlit_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "nqweba_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "oberer_kuhberg",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ox_bridge_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "photo_studio_broadway_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "piazza_san_marco",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "portland_landing_pad",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "red_church",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "roofless_ruins",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rural_asphalt_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "simons_town_rocks",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "small_cathedral",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "small_cathedral_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "smelting_tower_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "smelting_tower_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "smelting_tower_interior",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "snowy_cemetery",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spruit_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "spruit_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "suburban_football_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "thatch_chapel",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "tiber_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tiber_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "tiber_island",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "venice_dawn_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "venice_dawn_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "venice_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "venice_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "viale_giuseppe_garibaldi",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "whipple_creek_gazebo",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "whipple_creek_regional_park_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "whipple_creek_regional_park_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "wooden_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_07",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_08",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_09",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_10",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_11",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_12",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_13",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_14",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_15",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_16",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_17",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_18",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_studio_19",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "zwartkops_curve_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_curve_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_curve_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_pit",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_start_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_start_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_start_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_straight_afternoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_straight_morning",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "zwartkops_straight_sunset",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   }
+  ],
+  "test": [
+   {
+    "id": "abandoned_construction",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "between_bridges",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "binnenalster",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blue_lagoon",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "blue_lagoon_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "brown_photostudio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "brown_photostudio_07",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "cyclorama_hard_light",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "dry_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "evening_meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "farmland_overcast",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gamrig",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "golf_course_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "greenwich_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "greenwich_park_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "greenwich_park_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "gym_entrance",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "hall_of_finfish",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "harties_cliff_view",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "harvest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "hochsal_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "horn-koppe_snow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "horn-koppe_spring",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lakeside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lakeside_dawn",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lakeside_night",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lakeside_sunrise",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "lapa",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "leadenhall_market",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "lookout",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "marry_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "meadow",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "meadow_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "monbachtal_riverbank",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "mutianyu",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "neon_photostudio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "neuer_zollhof",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "old_tree_in_city_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "outdoor_workshop",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "palermo_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "palermo_square",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pedestrian_overpass",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "pergola_walkway",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "piazza_bologni",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "poly_haven_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "provence_studio",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "quarry_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_01_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_04_puresky",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "quarry_cloudy",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "railway_bridge_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "residential_garden",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "resting_place",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "resting_place_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "rotes_rathaus",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "school_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "shanghai_riverside",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "short_tunnel",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sisulu",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_forest_path_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "snowy_forest_path_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "steinbach_field",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stone_alley",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stone_alley_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "stone_alley_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "storeroom",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "stream",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "studio_country_hall",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "suburban_soccer_park",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sundowner_deck",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "sundowner_overlook",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunny_country_road",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunset_forest",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "sunset_in_the_chalk_quarry",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "surgery",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "teufelsberg_ground_1",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "teufelsberg_ground_2",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "teufelsberg_inner",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "teufelsberg_lookout",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "teufelsberg_roof",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ticknock_01",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ticknock_02",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ticknock_03",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ticknock_04",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "ulmer_muenster",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "under_bridge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "veld_fire",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   },
+   {
+    "id": "white_studio_01",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_studio_02",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_studio_03",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_studio_04",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_studio_05",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "white_studio_06",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "wooden_lounge",
+    "source": "polyhaven",
+    "environment": "indoor"
+   },
+   {
+    "id": "xanderklinge",
+    "source": "polyhaven",
+    "environment": "outdoor"
+   }
+  ],
+  "ood": [
+   {
+    "id": "DayEnvironmentHDRI002",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI004",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI005",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI007",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI009",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI013",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI015",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI017",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI039",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI040",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI046",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI047",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI051",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI059",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI064",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI066",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI071",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI077",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI082",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "DayEnvironmentHDRI107",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "EveningEnvironmentHDRI001",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "EveningEnvironmentHDRI003",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "EveningEnvironmentHDRI004",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI001",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI002",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI003",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI004",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI005",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI006",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI007",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI008",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI009",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI010",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI011",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI012",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI013",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI014",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI015",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI016",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI017",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI018",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI019",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI020",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI021",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI022",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "IndoorEnvironmentHDRI023",
+    "source": "ambientcg",
+    "environment": "indoor"
+   },
+   {
+    "id": "NightEnvironmentHDRI002",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   },
+   {
+    "id": "NightEnvironmentHDRI007",
+    "source": "ambientcg",
+    "environment": "outdoor"
+   }
+  ]
+ }
+}
