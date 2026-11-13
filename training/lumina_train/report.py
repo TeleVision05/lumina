@@ -12,7 +12,7 @@ from typing import Any
 import cv2
 import numpy as np
 
-from lumina_train import metrics
+from lumina_train import metrics, plots
 from lumina_train import sh as shm
 from lumina_train.fixedsets import TEST_POSES, TEST_SETTINGS
 from lumina_train.paths import DOCS_DIR, EVAL_DIR, MEDIA_DIR
@@ -33,6 +33,7 @@ COLUMNS = {
 }
 FIGURE_WORST = "eval-worst-cases.png"
 FIGURE_TYPICAL = "eval-typical-cases.png"
+FIGURE_CURVES = "train-curves.png"
 
 
 def protocol(stats: dict[str, Any], seed: int) -> dict[str, Any]:
@@ -160,6 +161,7 @@ def _training_section() -> str:
     rows = [json.loads(line) for line in log_path.read_text().splitlines() if line.strip()]
     meta = json.loads(meta_path.read_text())
     train = meta["training"]
+    _curve_figure(rows)
     keep = [r for r in rows if r["step"] % 5000 == 0 or r is rows[-1] or r["step"] <= 2000]
     lines = [
         "| Step | Minutes | Val loss | Val si-RMSE | Val sRGB RMSE | Val colour (deg)"
@@ -179,8 +181,30 @@ def _training_section() -> str:
         f"({train['samples_seen'] / 1e6:.1f} M synthetic crops). Exported weights: the EMA "
         f"weights at step {train['exported_step']} (lowest validation loss). Validation: "
         f"{train['val_samples']} fixed crops of the {train['val_hdris']} validation HDRIs, scored "
-        "every 1000 steps; the full log is `eval/train_log.jsonl`.\n\n" + "\n".join(lines) + "\n"
+        "every 1000 steps; the full log is `eval/train_log.jsonl`.\n\n"
+        f"![Training curves](media/{FIGURE_CURVES})\n\n" + "\n".join(lines) + "\n"
     )
+
+
+def _curve_figure(rows: list[dict[str, Any]]) -> None:
+    """Validation curves (EMA weights) and the running training loss terms."""
+    rows = [r for r in rows if r["step"] >= 3000]  # the first EMA evaluations are off-scale
+    if len(rows) < 2:
+        return
+    steps = np.array([r["step"] for r in rows], float)
+
+    def col(key: str) -> np.ndarray:
+        return np.array([r[key] for r in rows], float)
+
+    panels = [
+        plots.line_panel(steps, {"val si-RMSE": col("val_si_rmse"), "val RMSE": col("val_rmse")},
+                         "Validation sphere error (linear)"),
+        plots.line_panel(steps, {"val sRGB RMSE": col("val_srgb_rmse")},
+                         "Validation sphere error (8-bit sRGB levels)"),
+        plots.line_panel(steps, {"train irr": col("train_irr"), "val irr": col("val_irr")},
+                         "Irradiance loss term"),
+    ]  # fmt: skip
+    plots.save_panels(panels, MEDIA_DIR / FIGURE_CURVES)
 
 
 DEFINITIONS = """\

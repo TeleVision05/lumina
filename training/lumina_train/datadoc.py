@@ -13,7 +13,7 @@ import textwrap
 from collections import Counter
 from typing import Any
 
-from lumina_train.paths import AMBIENTCG_DIR, DOCS_DIR, POLYHAVEN_DIR, SPLIT_PATH
+from lumina_train.paths import AMBIENTCG_DIR, DOCS_DIR, POLYHAVEN_DIR, SAMPLES_DIR, SPLIT_PATH
 
 CAMERA_MODEL = """\
 ## Synthetic camera model
@@ -119,9 +119,37 @@ outdoor are each split about 80/10/10. "indoor"/"outdoor" is Poly Haven's `envir
 {rows}
 
 {CAMERA_MODEL}
+{_clips_section()}
 ## HDRI ids by split
 
 {lists}
+"""
+
+
+def _clips_section() -> str:
+    index_path = SAMPLES_DIR / "index.json"
+    if not index_path.exists():
+        return ""
+    clips = json.loads(index_path.read_text())["clips"]
+    rows = "\n".join(
+        f"| `{c['video']}` | [{c['hdri']}](https://polyhaven.com/a/{c['hdri']}) | "
+        f"{c['environment']} | {c['frames']} at {c['fps']} fps | {c['bytes']:,} | "
+        f"{c['description']} |"
+        for c in clips
+    )
+    return f"""## Sample clips (`web/public/samples/`)
+
+Rendered by `uv run python -m lumina_train.clips` from **test-split** HDRIs (never trained on),
+re-downloaded at 4k from the same API (CC0, https://polyhaven.com/license) so 640 x 480 frames
+are sharp. Same camera model as training, minus JPEG (the H.264 encode replaces it): fixed white
+balance per clip, auto-exposure re-metered every frame and smoothed (EMA weight 0.15 per frame on
+log exposure), mild blur, vignetting and noise. Each `<name>.json` holds the true SH per frame
+(exposure and white balance applied, CONVENTIONS section 5) and what the shipped model predicts
+on the decoded video.
+
+| Video | HDRI | Scene | Frames | Bytes | Motion |
+|---|---|---|---|---|---|
+{rows}
 """
 
 
