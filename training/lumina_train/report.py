@@ -194,7 +194,7 @@ def _training_section() -> str:
         f"{train['batch']} samples on {train['device']}, "
         f"{train['wall_clock_hours']:.2f} h wall clock "
         f"({train['samples_seen'] / 1e6:.1f} M synthetic crops). Exported weights: the EMA "
-        f"weights at step {train['exported_step']} (lowest validation loss). Validation: "
+        f"weights at step {train['exported_step']} ({train['checkpoint_rule']}). Validation: "
         f"{train['val_samples']} fixed crops of the {train['val_hdris']} validation HDRIs, scored "
         "every 1000 steps; the full log is `eval/train_log.jsonl`.\n\n"
         f"![Training curves](media/{FIGURE_CURVES})\n\n" + "\n".join(lines) + "\n"

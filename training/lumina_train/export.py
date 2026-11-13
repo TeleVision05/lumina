@@ -2,12 +2,12 @@
 
     uv run python -m lumina_train.export --run main
 
-Loads the EMA weights of data/runs/<run>/best.pt, exports web/public/models/lumina-sh.onnx with
-the contract's names, shapes and metadata (normalisation and the output parametrisation are
-inside the graph), checks PyTorch against onnxruntime on fixed inputs, writes the parity fixture
-training/tests/fixtures/model_parity.npz (so pytest can re-check the committed file) and
-web/public/models/lumina-sh.json (version, training date, validation metrics, SHA-256), and copies
-the run's log to eval/train_log.jsonl.
+Loads the EMA weights of data/runs/<run>/last.pt (the final step, see CHECKPOINT_RULE), exports
+web/public/models/lumina-sh.onnx with the contract's names, shapes and metadata (normalisation
+and the output parametrisation are inside the graph), checks PyTorch against onnxruntime on
+fixed inputs, writes the parity fixture training/tests/fixtures/model_parity.npz (so pytest
+can re-check the committed file) and web/public/models/lumina-sh.json (version, training date,
+validation metrics, SHA-256), and copies the run's log to eval/train_log.jsonl.
 """
 
 from __future__ import annotations
@@ -38,9 +38,15 @@ FIXTURE_PATH = REPO_ROOT / "training" / "tests" / "fixtures" / "model_parity.npz
 SIZE_BUDGET = 8 * 1024 * 1024
 PARITY_ATOL = 1e-4
 PARITY_RTOL = 1e-4
+#: Why last.pt and not the checkpoint with the lowest validation loss: the loss's relative
+#: irradiance term is dominated by a few crops whose true lighting is far dimmer than the picture
+#: suggests (at step 21000, 10 of 816 validation crops made 56 % of it, two crops of one HDRI
+#: alone about 36 %), so it rose after step 10000 while every sphere metric kept improving.
+#: Taking the end of the fixed schedule also avoids selecting on the validation set at all.
+CHECKPOINT_RULE = "EMA weights at the final step of the fixed schedule, no selection on validation"
 
 
-def load_ema(run_dir: Path, name: str = "best.pt") -> tuple[LuminaNet, dict[str, Any]]:
+def load_ema(run_dir: Path, name: str = "last.pt") -> tuple[LuminaNet, dict[str, Any]]:
     ckpt = torch.load(run_dir / name, map_location="cpu")
     model = LuminaNet()
     model.load_state_dict(ckpt["ema"])
@@ -100,7 +106,7 @@ def write_meta(
         "val_dir_deg",
         "val_dir_deg_directional",
     )
-    trained = dt.datetime.fromtimestamp((run_dir / "best.pt").stat().st_mtime, dt.UTC)
+    trained = dt.datetime.fromtimestamp((run_dir / "last.pt").stat().st_mtime, dt.UTC)
     val = load_or_build_val_set()
     meta = {
         "name": "lumina-sh",
@@ -137,6 +143,7 @@ def write_meta(
             "seed": cfg["seed"],
             "steps": rows[-1]["step"],
             "exported_step": int(ckpt["step"]),
+            "checkpoint_rule": CHECKPOINT_RULE,
             "batch": GROUPS * CROPS_PER_GROUP,
             "samples_seen": rows[-1]["step"] * GROUPS * CROPS_PER_GROUP,
             "device": "Apple M2 Max (MPS)",
