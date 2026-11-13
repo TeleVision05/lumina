@@ -33,6 +33,16 @@ packages = ["training/lumina_train"]
 # Reproducible resolution: ignore anything published after this instant.
 exclude-newer = "2026-10-30T00:00:00Z"
 
+# Linux (CI) gets CPU-only torch wheels instead of the multi-GB CUDA build; macOS uses PyPI (MPS).
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+torchvision = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
 [tool.pytest.ini_options]
 testpaths = ["training/tests"]
 addopts = "-ra"

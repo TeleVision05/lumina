@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python (ruff, pytest)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.11.0'
+          python-version: '3.12'
+          enable-cache: true
+      - name: Install (locked; CPU torch on Linux)
+        run: uv sync --frozen
+      - name: ruff check
+        run: uv run ruff check .
+      - name: ruff format
+        run: uv run ruff format --check .
+      - name: No source file over 500 lines
+        run: git ls-files -z | xargs -0 uv run python scripts/hooks/check_file_length.py --max 500
+      - name: pytest
+        run: uv run pytest -q
+
+  web:
+    name: Web (eslint, prettier, typecheck, vitest, build)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm audit --audit-level=low
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  # --- E2E JOB GOES HERE (browser end-to-end) -------------------------------------------------
+  # Planned: headless Chromium via Playwright, needs: [web].
+  #   - npx playwright install --with-deps --only-shell chromium
+  #   - npm run e2e   (three.js LightProbe parity + ONNX smoke; later the fake-camera Y4M tests)
+  # The suite already passes locally (see docs/CONVENTIONS.md section 3); it is left out of CI
+  # until the web engineer owns it, per the foundation brief.
+  # ---------------------------------------------------------------------------------------------
+
+  # --- PAGES DEPLOY GOES HERE ------------------------------------------------------------------
+  # Planned: on push to main only, needs: [python, web, e2e]; build web/dist (base /lumina/),
+  # actions/upload-pages-artifact + actions/deploy-pages with permissions pages: write and
+  # id-token: write, environment github-pages. Target: https://television05.github.io/lumina/
+  # ---------------------------------------------------------------------------------------------
