@@ -70,26 +70,41 @@ def table(split: dict[str, Any], subset: str, columns: dict[str, str] = COLUMNS)
     return "\n".join([head, sep, *rows])
 
 
-def verdicts(split: dict[str, Any], subset: str) -> list[str]:
-    """Plain statements comparing the CNN with each baseline, from the CIs alone."""
-    out = []
-    cnn = split["methods"]["cnn"][subset]
-    for base in ("mean", "image_mean", "image_dir"):
-        other = split["methods"][base][subset]
-        for col, label in COLUMNS.items():
-            a, b = cnn[col], other[col]
-            if a["mean"] is None or b["mean"] is None:
+BASELINES = ("mean", "image_mean", "image_dir")
+
+
+def verdict(diff: dict[str, Any]) -> str:
+    """From the paired difference CNN - baseline (lower is better)."""
+    if diff["mean"] is None:
+        return "n/a"
+    if diff["ci"][1] < 0:
+        return "better"
+    if diff["ci"][0] > 0:
+        return "**WORSE**"
+    return "no clear difference"
+
+
+def paired_table(split: dict[str, Any], subset: str) -> str:
+    """CNN minus each baseline, paired per HDRI, with the 95 % CI and a verdict per cell."""
+    cols = {k: v for k, v in COLUMNS.items() if k != "dir_deg_diffuse"}
+    head = "| CNN minus | " + " | ".join(cols.values()) + " |"
+    sep = "|---" * (len(cols) + 1) + "|"
+    rows = []
+    for base in BASELINES:
+        diffs = split["paired_cnn_minus"][base][subset]
+        cells = []
+        for c in cols:
+            d = diffs[c]
+            if d["mean"] is None:
+                cells.append("n/a")
                 continue
-            if a["ci"][1] < b["ci"][0]:
-                word = "better (95 % CIs do not overlap)"
-            elif a["ci"][0] > b["ci"][1]:
-                word = "**WORSE** (95 % CIs do not overlap)"
-            elif a["mean"] < b["mean"]:
-                word = "lower mean, but the CIs overlap (not a clear win)"
-            else:
-                word = "**NOT better** (higher or equal mean)"
-            out.append(f"- vs {METHOD_NAMES[base].lower()}, {label}: {word}.")
-    return out
+            digits = 3 if abs(d["mean"]) < 10 else 1
+            lo, hi = d["ci"]
+            cells.append(
+                f"{d['mean']:+.{digits}f} [{lo:+.{digits}f}, {hi:+.{digits}f}] {verdict(d)}"
+            )
+        rows.append(f"| {METHOD_NAMES[base]} | " + " | ".join(cells) + " |")
+    return "\n".join([head, sep, *rows])
 
 
 def _sphere_srgb(sh: np.ndarray, size: int) -> np.ndarray:
@@ -267,12 +282,17 @@ def _split_section(title: str, split: dict[str, Any]) -> str:
         f"{split['n_crops']} crops.\n",
         "### All scenes\n",
         table(split, "all"),
-        "\nWhat the numbers say (generated from the CIs):\n",
-        "\n".join(verdicts(split, "all")),
+        "\nPaired comparison, CNN minus baseline (negative = the CNN is better), per-HDRI "
+        "difference with its 95 % bootstrap CI; the verdict is generated from the CI:\n",
+        paired_table(split, "all"),
         "\n### Indoor\n",
         table(split, "indoor"),
+        "",
+        paired_table(split, "indoor"),
         "\n### Outdoor\n",
         table(split, "outdoor"),
+        "",
+        paired_table(split, "outdoor"),
         "\n### Win rate: share of HDRIs where the CNN's error is lower\n",
         _win_table(split["win_rate_cnn_vs"]),
         "\n### CNN by exposure / white-balance setting\n",
@@ -312,6 +332,36 @@ def _worst_list(worst: list[dict[str, Any]]) -> str:
     )
 
 
+def summary(results: dict[str, Any]) -> str:
+    """Where the CNN beats every baseline (paired CI below zero), and where it does not."""
+    lines = [
+        "## Summary\n",
+        "Generated from the paired per-HDRI differences (CNN minus baseline, 95 % bootstrap CI), "
+        "all scenes. 'Better' means the whole CI is below zero.\n",
+    ]
+    for key, title in (("test", "Held-out Poly Haven test"), ("ood", "ambientCG (OOD)")):
+        split = results["splits"][key]
+        wins, losses = [], []
+        for col, label in COLUMNS.items():
+            if col == "dir_deg_diffuse":
+                continue
+            words = {b: verdict(split["paired_cnn_minus"][b]["all"][col]) for b in BASELINES}
+            if all(w == "better" for w in words.values()):
+                wins.append(label)
+                continue
+            detail = "; ".join(
+                f"{w.strip('*').lower()} vs {METHOD_NAMES[b].lower()}"
+                for b, w in words.items()
+                if w != "better"
+            )
+            losses.append(f"{label} ({detail})")
+        lines.append(
+            f"- **{title}**: better than every baseline on {', '.join(wins) or 'no metric'}. "
+            f"Not better than every baseline on: {', '.join(losses) or 'none'}."
+        )
+    return "\n".join(lines) + "\n"
+
+
 def write_eval_md(results: dict[str, Any]) -> None:
     proto = results["protocol"]
     model = results["model"]
@@ -324,6 +374,7 @@ def write_eval_md(results: dict[str, Any]) -> None:
     )
     body = [
         head,
+        summary(results),
         DEFINITIONS.format(
             threshold=proto["directional_threshold"],
             directionality=proto["train_mean_directionality"],

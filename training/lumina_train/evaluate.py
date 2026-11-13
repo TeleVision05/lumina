@@ -73,13 +73,26 @@ def predictions(
     }
 
 
-def summarise(per: dict[str, np.ndarray], hdri: np.ndarray, mask: np.ndarray) -> dict[str, Any]:
-    """Mean and bootstrap CI over HDRIs of every metric, for the crops in mask."""
+def summarise(
+    per: dict[str, np.ndarray],
+    hdri: np.ndarray,
+    mask: np.ndarray,
+    minus: dict[str, np.ndarray] | None = None,
+) -> dict[str, Any]:
+    """Mean and bootstrap CI over HDRIs of every metric, for the crops in mask.
+
+    With minus (another method's per-crop scores), summarises the paired difference per - minus:
+    each HDRI's mean difference over the same crops, so scene difficulty cancels out.
+    """
     out: dict[str, Any] = {}
     strong = per["directionality"] >= metrics.DIRECTIONAL_THRESHOLD
-    columns = {key: (per[key], mask) for key in metrics.METRICS if key != "dir_deg"}
-    columns["dir_deg_directional"] = (per["dir_deg"], mask & strong)
-    columns["dir_deg_diffuse"] = (per["dir_deg"], mask & ~strong)
+
+    def value(key: str) -> np.ndarray:
+        return per[key] - minus[key] if minus is not None else per[key]
+
+    columns = {key: (value(key), mask) for key in metrics.METRICS if key != "dir_deg"}
+    columns["dir_deg_directional"] = (value("dir_deg"), mask & strong)
+    columns["dir_deg_diffuse"] = (value("dir_deg"), mask & ~strong)
     for key, (values, m) in columns.items():
         if not m.any():
             out[key] = {"mean": None, "ci": [None, None], "n_hdri": 0}
@@ -125,6 +138,13 @@ def evaluate_split(
             m: {s: summarise(scores[m], hdri, mask) for s, mask in subsets.items()} for m in METHODS
         },
         "win_rate_cnn_vs": win_rates(scores, hdri),
+        "paired_cnn_minus": {
+            b: {
+                s: summarise(scores["cnn"], hdri, subsets[s], minus=scores[b])
+                for s in ("all", "indoor", "outdoor")
+            }
+            for b in METHODS[1:]
+        },
     }
     detail = {"rendered": rendered, "preds": preds, "scores": scores}
     return result, detail
