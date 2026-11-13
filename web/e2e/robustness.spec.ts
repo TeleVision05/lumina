@@ -79,5 +79,8 @@ test('switching to a camera that fails falls back to the one in use and says so'
   await expect(page.locator('#toast')).toContainText('went back to the one you were using');
   await expect(page.locator('#app')).toHaveAttribute('data-phase', 'running');
   const before = (await state(page)).inferenceCount;
-  await expect.poll(async () => (await state(page)).inferenceCount).toBeGreaterThan(before + 3);
+  // Software WebGL on a shared CI runner can drop below 1 inference per second.
+  await expect
+    .poll(async () => (await state(page)).inferenceCount, { timeout: 20_000 })
+    .toBeGreaterThan(before + 3);
 });
