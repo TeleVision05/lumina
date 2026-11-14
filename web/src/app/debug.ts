@@ -70,6 +70,8 @@ export interface NeuralCapture {
 
 export interface LuminaDebug {
   state: () => LuminaDebugState;
+  /** Mean absolute per-pixel difference (levels) between two consecutive renders of the object. */
+  renderJitter: () => number;
   lastNeural: () => NeuralCapture | null;
   sampleObject: () => ObjectSample;
 }
@@ -119,7 +121,7 @@ function state(app: App): LuminaDebugState {
   };
 }
 
-function sampleObject(app: App): ObjectSample {
+function readObjectPixels(app: App): Uint8Array {
   const source = app.source;
   if (source === null) throw new Error('no source running');
   app.renderFrame(performance.now(), source);
@@ -132,6 +134,28 @@ function sampleObject(app: App): ObjectSample {
   const y = Math.max(0, gl.drawingBufferHeight - Math.round((r.y + r.h) * dpr));
   const px = new Uint8Array(w * h * 4);
   gl.readPixels(x, y, w, h, gl.RGBA, gl.UNSIGNED_BYTE, px);
+  return px;
+}
+
+function renderJitter(app: App): number {
+  const a = readObjectPixels(app);
+  const b = readObjectPixels(app);
+  let sum = 0;
+  let n = 0;
+  for (let k = 0; k < a.length; k += 4) {
+    if ((a[k + 3] ?? 0) < 250 || (b[k + 3] ?? 0) < 250) continue;
+    for (let c = 0; c < 3; c++) sum += Math.abs((a[k + c] ?? 0) - (b[k + c] ?? 0));
+    n += 3;
+  }
+  return n === 0 ? 0 : sum / n;
+}
+
+function sampleObject(app: App): ObjectSample {
+  const px = readObjectPixels(app);
+  const r = app.stage.objectScreenRect(window.innerWidth, window.innerHeight);
+  const dpr = app.stage.renderer.getPixelRatio();
+  const w = Math.max(1, Math.round(r.w * dpr));
+  const h = Math.max(1, Math.round(r.h * dpr));
   const sum = [0, 0, 0];
   let covered = 0;
   for (let k = 0; k < px.length; k += 4) {
@@ -152,6 +176,7 @@ export function attachDebug(app: App): void {
   window.__lumina = {
     state: () => state(app),
     sampleObject: () => sampleObject(app),
+    renderJitter: () => renderJitter(app),
     lastNeural: () => {
       const n = app.pipeline.lastNeural;
       return n === null ? null : { rgba: Array.from(n.rgba), sh: n.sh };

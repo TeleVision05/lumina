@@ -33,9 +33,11 @@
   "trained": "2026-11-13",
   "training": {
     "command": "uv run python -m lumina_train.train --run main --steps 50000",
+    "reproduction_note": "Launch command of the run. The weights are its step-2000 EMA snapshot, so --steps 2000 would not reproduce them (the learning-rate schedule is set by --steps). The run continued past this snapshot; later checkpoints were not exported or evaluated for this release.",
     "seed": 7,
     "steps": 2000,
     "exported_step": 2000,
+    "checkpoint_rule": "EMA weights at step 2000, a snapshot of the 50,000-step run taken while it was still in progress (not the end of the schedule); no selection on validation",
     "batch": 256,
     "samples_seen": 512000,
     "device": "Apple M2 Max (MPS)",

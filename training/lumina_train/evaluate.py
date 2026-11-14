@@ -115,6 +115,26 @@ def win_rates(scores: dict[str, dict[str, np.ndarray]], hdri: np.ndarray) -> dic
     return out
 
 
+def output_spread(pred: np.ndarray, label: np.ndarray) -> dict[str, Any]:
+    """How much the network's output varies compared with the labels (arrays [N, 9, 3]).
+
+    A model that tracks the lighting has a predicted spread near the label spread and a high
+    per-coefficient correlation; a model that mostly returns an average has neither.
+    """
+    pred, label = pred.astype(np.float64), label.astype(np.float64)
+    std_p, std_l = pred.std(0).mean(1), label.std(0).mean(1)
+    corr = [float(np.corrcoef(pred[:, k, 1], label[:, k, 1])[0, 1]) for k in range(9)]
+    sse = ((pred - label) ** 2).sum()
+    sst = ((label - label.mean(0)) ** 2).sum()
+    return {
+        "std_pred_per_coef": [float(v) for v in std_p],
+        "std_label_per_coef": [float(v) for v in std_l],
+        "variance_ratio_pred_over_label": float(pred.var(0).sum() / label.var(0).sum()),
+        "corr_per_coef_green": corr,
+        "r2_vs_label_mean": float(1.0 - sse / sst),
+    }
+
+
 def evaluate_split(
     split: str, model_path: Path, stats: dict[str, Any]
 ) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -138,6 +158,7 @@ def evaluate_split(
             m: {s: summarise(scores[m], hdri, mask) for s, mask in subsets.items()} for m in METHODS
         },
         "win_rate_cnn_vs": win_rates(scores, hdri),
+        "output_spread": output_spread(preds["cnn"], rendered["labels"]),
         "paired_cnn_minus": {
             b: {
                 s: summarise(scores["cnn"], hdri, subsets[s], minus=scores[b])

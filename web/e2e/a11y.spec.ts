@@ -1,6 +1,6 @@
 /** Keyboard use, reduced motion and the phone layout. */
-import { expect, test } from '@playwright/test';
-import { sampleObject, state, waitForEstimates } from './helpers';
+import { expect, test, type Page } from '@playwright/test';
+import { state, waitForEstimates } from './helpers';
 
 test('the whole flow works from the keyboard', async ({ page }) => {
   await page.goto('?debug');
@@ -41,16 +41,26 @@ test('the whole flow works from the keyboard', async ({ page }) => {
   await expect(page.locator('#settings')).toBeHidden();
 });
 
-test('reduced motion: the app runs and the grain does not animate', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+async function objectRenderJitter(page: Page): Promise<number> {
   await page.goto('?debug');
   await page.getByRole('button', { name: 'Use my camera' }).click();
   await waitForEstimates(page, 'neural', 3);
-  const a = await sampleObject(page);
-  const b = await sampleObject(page);
-  expect(a.coverage).toBeGreaterThan(0.4);
-  // Same estimate, same static grain: two renders in a row match closely.
-  expect(Math.abs(a.mean[0] - b.mean[0])).toBeLessThan(1.5);
+  // Fixed light is a constant estimate, so the grain is the only thing that can differ between two
+  // renders in a row (with the live estimate the lamp and the filter moved the mean by up to 1.6
+  // levels and made the old mean-colour check flaky under load).
+  await page.getByRole('radio', { name: 'Fixed light' }).check();
+  return page.evaluate(() => window.__lumina?.renderJitter() ?? Number.NaN);
+}
+
+test('reduced motion: the grain does not animate', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await objectRenderJitter(page)).toBeLessThan(0.5);
+});
+
+test('control: without reduced motion the grain does animate (the jitter measure can see it)', async ({
+  page,
+}) => {
+  expect(await objectRenderJitter(page)).toBeGreaterThan(1);
 });
 
 test.describe('phone portrait', () => {

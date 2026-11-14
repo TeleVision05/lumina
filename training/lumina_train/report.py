@@ -15,7 +15,7 @@ import numpy as np
 from lumina_train import metrics, plots
 from lumina_train import sh as shm
 from lumina_train.fixedsets import TEST_POSES, TEST_SETTINGS
-from lumina_train.paths import DOCS_DIR, EVAL_DIR, MEDIA_DIR
+from lumina_train.paths import DOCS_DIR, EVAL_DIR, MEDIA_DIR, MODEL_META_PATH
 
 METHOD_NAMES = {
     "cnn": "LuminaNet (CNN)",
@@ -170,12 +170,13 @@ def worst_cases_figure(detail: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _training_section() -> str:
     log_path = EVAL_DIR / "train_log.jsonl"
-    meta_path = DOCS_DIR.parent / "web" / "public" / "models" / "lumina-sh.json"
+    meta_path = MODEL_META_PATH
     if not log_path.exists() or not meta_path.exists():
         return "Training log not committed yet.\n"
     rows = [json.loads(line) for line in log_path.read_text().splitlines() if line.strip()]
     meta = json.loads(meta_path.read_text())
     train = meta["training"]
+    rule = train.get("checkpoint_rule", "selection rule not recorded")
     _curve_figure(rows)
     keep = [r for r in rows if r["step"] % 5000 == 0 or r is rows[-1] or r["step"] <= 2000]
     lines = [
@@ -194,9 +195,10 @@ def _training_section() -> str:
         f"{train['batch']} samples on {train['device']}, "
         f"{train['wall_clock_hours']:.2f} h wall clock "
         f"({train['samples_seen'] / 1e6:.1f} M synthetic crops). Exported weights: the EMA "
-        f"weights at step {train['exported_step']} ({train['checkpoint_rule']}). Validation: "
+        f"weights at step {train['exported_step']} ({rule}). Validation: "
         f"{train['val_samples']} fixed crops of the {train['val_hdris']} validation HDRIs, scored "
-        "every 1000 steps; the full log is `eval/train_log.jsonl`.\n\n"
+        "every 1000 steps; the full log is `eval/train_log.jsonl`. "
+        f"{train.get('reproduction_note', '')}\n\n"
         f"![Training curves](media/{FIGURE_CURVES})\n\n" + "\n".join(lines) + "\n"
     )
 
@@ -271,6 +273,12 @@ LIMITS = """\
 - Numbers from papers (DeepLight, Garon et al.) use other test sets and definitions; they are not
   comparable with these.
 - Browser speed is not measured here (the web app's job).
+- Possible same-place leakage was checked for `snowy_forest` (train) against
+  `snowy_forest_path_01` and `_02` (test): Poly Haven lists different photographers (Adrian
+  Kubasa vs Oliksiy Yakovlyev, no GPS for any of them) and the images show different scenes (a
+  bare conifer plantation floor vs snow-covered tree-lined paths), so they are not the same
+  location and no exclusion was made. `snowy_forest_path_01` and `_02` look like one location and
+  are both in test. This is a visual and metadata check, not proof.
 """
 
 
@@ -362,6 +370,40 @@ def summary(results: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def read_this_first(results: dict[str, Any]) -> str:
+    """The caveats a reader must see before any table, with the measured output spread."""
+    spread = results["splits"]["test"]["output_spread"]
+    ratio = spread["variance_ratio_pred_over_label"]
+    corr = spread["corr_per_coef_green"]
+    rows = [
+        "| SH coefficient | Label std | Prediction std | Correlation (green) |",
+        "|---|---|---|---|",
+    ]
+    for k in range(9):
+        rows.append(
+            f"| {k} | {spread['std_label_per_coef'][k]:.2f} | "
+            f"{spread['std_pred_per_coef'][k]:.2f} | {corr[k]:.2f} |"
+        )
+    return (
+        "## Read this first\n\n"
+        "- **The shipped weights are an early snapshot**: the EMA weights at step 2000 of a "
+        "50,000-step schedule (see Training below), not a converged model.\n"
+        "- **The network's output barely varies.** On the 1,545 test crops the total variance of "
+        f"its predicted SH coefficients is {ratio * 100:.3f} % of the label variance, the "
+        f"per-coefficient correlation with the truth is {min(corr):.2f} to {max(corr):.2f}, and "
+        f"R2 against the label mean is {spread['r2_vs_label_mean']:.3f} (0 means no better than "
+        "always answering the average). In the demo this means the lighting it applies is close "
+        "to a fixed average that shifts a little with brightness and colour cast; it does not "
+        "reconstruct the structure of the room's light. The small direction signal that exists "
+        "is enough to follow a light sweeping round, not to place it accurately.\n"
+        "- **Everything here is on synthetic crops of CC0 panoramas.** Accuracy on real webcams "
+        "has not been measured.\n\n" + "\n".join(rows) + "\n\n"
+        "Rows are the SH basis order of docs/CONVENTIONS.md; std is over the test crops, mean "
+        "over RGB; correlation is over the test crops for the green channel. Produced by "
+        "`output_spread` in `training/lumina_train/evaluate.py`.\n\n"
+    )
+
+
 def write_eval_md(results: dict[str, Any]) -> None:
     proto = results["protocol"]
     model = results["model"]
@@ -374,6 +416,7 @@ def write_eval_md(results: dict[str, Any]) -> None:
     )
     body = [
         head,
+        read_this_first(results),
         summary(results),
         DEFINITIONS.format(
             threshold=proto["directional_threshold"],

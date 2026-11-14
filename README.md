@@ -26,7 +26,7 @@ otherwise single-thread WASM; no special server headers are required.
 
 ```sh
 uv sync                                    # Python 3.12 venv in .venv
-uv run pytest                              # Python tests (100)
+uv run pytest                              # Python tests (102)
 
 cd web
 npm ci
@@ -45,11 +45,21 @@ lumina_train.evaluate` (needs the HDRIs, see `docs/DATA.md`). The training/web c
 
 ## How well does it work
 
-**Honest summary: the shipped model is an early, short training run and only a modest improvement
-over simple baselines.** It was trained for 2,000 steps (0.13 h on one laptop GPU), well short of
-the 50,000-step run its command records. All numbers are from `eval/results.json`, generated
-2026-11-13, on 103 held-out Poly Haven HDRIs (1,545 synthetic crops), mean over HDRIs with 95 %
-bootstrap CIs over HDRIs. Lower is better. Full tables and failure cases: `docs/EVAL.md`.
+**Honest summary: the shipped model is an early snapshot, only a modest improvement over simple
+baselines on average error, and its output barely varies from image to image.** The weights are
+the step-2000 snapshot (0.13 h on one laptop GPU) of a run launched for 50,000 steps; the launch
+command is recorded in `web/public/models/lumina-sh.json`, and `--steps 2000` would not reproduce
+the weights because the learning-rate schedule depends on it. All numbers are from
+`eval/results.json`, generated 2026-11-14, on 103 held-out Poly Haven HDRIs (1,545 synthetic
+crops), mean over HDRIs with 95 % bootstrap CIs over HDRIs. Lower is better. Full tables and
+failure cases: `docs/EVAL.md`.
+
+**The network's output barely varies.** On the test crops the variance of its predicted
+coefficients is 0.006 % of the label variance, and the per-coefficient correlation with the truth
+is 0.01 to 0.21 (R2 against always answering the average: -0.007). What the demo applies is
+therefore close to a fixed average lighting that shifts a little with brightness and colour cast;
+it does not reconstruct the structure of the room's light. The small direction signal is enough
+to follow a light sweeping round (see the truth test below), not to place it accurately.
 
 | Method                                         | RMSE (linear)        | si-RMSE (linear)     | sRGB RMSE (8-bit levels) | Colour error (deg) | Direction error, directional scenes (deg) |
 |---|---|---|---|---|---|
@@ -58,13 +68,19 @@ bootstrap CIs over HDRIs. Lower is better. Full tables and failure cases: `docs/
 | Image-mean colour, ambient only | 1.099 [0.611, 1.885] | 0.613 [0.364, 1.012] | 70.5 [65.2, 75.5] | 8.7 [7.9, 9.6] | 90.0 (no direction) |
 | Image-mean colour + brightest-region direction | 1.157 [0.668, 1.943] | 0.939 [0.516, 1.638] | 109.5 [103.4, 115.3] | 8.7 [7.9, 9.6] | 79.9 [75.7, 84.2] |
 
-- Clear wins over the training-set mean: sRGB RMSE and colour error (CIs do not overlap).
-- Linear RMSE is lower than every baseline, but the CIs overlap: not a clear win.
-- Dominant-light direction is **not better** than the training-set mean (it is clearly better than
-  the brightest-region heuristic baseline, 53.2 against 79.9 degrees).
-- Plain image-mean colour has a **better colour error** than the CNN.
-- On 48 out-of-distribution ambientCG HDRIs the picture is the same (CNN RMSE 0.923
-  [0.665, 1.226], sRGB RMSE 62.8 against 86.8 for the training mean).
+Paired comparison (per-HDRI difference CNN minus baseline, 95 % bootstrap CI, `docs/EVAL.md`):
+
+- On the test split the CNN is better than all three baselines on linear RMSE, si-RMSE and sRGB
+  RMSE (the whole CI is below zero).
+- Dominant-light direction: no clear difference from the training-set mean (53.2 against 53.1
+  degrees); clearly better than the brightest-region heuristic (79.9 degrees).
+- Plain image-mean colour has a **better colour error** than the CNN (8.7 against 13.0 degrees).
+- On 48 out-of-distribution ambientCG HDRIs: better than every baseline on linear RMSE and sRGB
+  RMSE, no clear difference from the training mean on si-RMSE, and **worse** than the training
+  mean on direction.
+- Train/test leakage check: `snowy_forest` (train) vs `snowy_forest_path_01`/`_02` (test) are by
+  different photographers and show different scenes, so they are not the same place; no result was
+  excluded (`docs/EVAL.md`, limits).
 
 ## Limits
 
@@ -84,19 +100,24 @@ bootstrap CIs over HDRIs. Lower is better. Full tables and failure cases: `docs/
 ## Tests that prove it
 
 `web/e2e/truth.spec.ts` plays a sample clip with known lighting per frame as the fake camera in the
-production build and checks (numbers from the run of 2026-11-13; run `npm run e2e:dist` to reproduce):
+production build and checks (ranges over at least nine runs on 2026-11-13 and 2026-11-14, one of them the independent reviewer's; run `npm run e2e:dist` to reproduce):
 
 - the 128 x 96 frames the network sees match an independent ffmpeg resize (median 3.5 levels of
   255 apart), and the network's output in the browser equals Python onnxruntime on those very
   frames (largest difference 2.4e-7, so preprocessing and graph agree with the Python side);
 - as the environment turns 360 degrees, the estimated light azimuth sweeps the same way as the true
-  one (agreement 0.48 to 0.58 against 0.09 to 0.31 for the reversed sweep, median direction error 44 to 53
-  degrees over six runs,
+  one (agreement 0.46 to 0.58 against 0.09 to 0.33 for the reversed sweep, median direction error 44 to 53
+  degrees over at least nine runs,
   so it follows the light but is not accurate), the displayed estimate trails the network by about
   80 to 250 ms, and the lit probe ball's bright side matches the estimated side in 100 % of samples and
-  the true side in 96 % (stable across runs).
+  the true side in 96 to 98 %.
 
-The test was mutation-checked: pairing frames with the reversed truth makes it fail.
+The thresholds in `truth.spec.ts` (same-sweep agreement above 0.3 and above the reversed sweep by
+0.1; lag under 1.5 s) were set **after** observing runs, and the sample floor and frame-matching
+window were loosened once after a slow CI runner produced too few samples. They were mutation-checked
+by hand (not as committed tests): a constant, random or x-mirrored estimate, and pairing frames with
+the reversed truth, each make it fail. The margin is thin: the ranges above come from several runs on
+the author's laptop plus the reviewer's, and a loaded runner can land outside them.
 
 ## Privacy
 
