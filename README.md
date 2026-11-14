@@ -90,10 +90,10 @@ production build and checks (numbers from the run of 2026-11-13; run `npm run e2
   255 apart), and the network's output in the browser equals Python onnxruntime on those very
   frames (largest difference 2.4e-7, so preprocessing and graph agree with the Python side);
 - as the environment turns 360 degrees, the estimated light azimuth sweeps the same way as the true
-  one (agreement 0.54 to 0.58 against 0.09 to 0.21 for the reversed sweep, median direction error 44 to 51
-  degrees over four runs,
+  one (agreement 0.48 to 0.58 against 0.09 to 0.31 for the reversed sweep, median direction error 44 to 53
+  degrees over six runs,
   so it follows the light but is not accurate), the displayed estimate trails the network by about
-  170 to 250 ms, and the lit probe ball's bright side matches the estimated side in 100 % of samples and
+  80 to 250 ms, and the lit probe ball's bright side matches the estimated side in 100 % of samples and
   the true side in 96 % (stable across runs).
 
 The test was mutation-checked: pairing frames with the reversed truth makes it fail.
