@@ -31,7 +31,9 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
   reporter: [['list']],
-  testIgnore: TARGET === 'dist' ? ['parity.spec.ts', 'model.spec.ts', 'shading.spec.ts'] : [],
+  // truth.spec.ts needs ffmpeg and uv; it runs against the production build (e2e:dist).
+  testIgnore:
+    TARGET === 'dist' ? ['parity.spec.ts', 'model.spec.ts', 'shading.spec.ts'] : ['truth.spec.ts'],
   use: {
     baseURL: `http://localhost:${PORT}/lumina/`,
     headless: true,

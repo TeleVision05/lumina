@@ -23,7 +23,6 @@ test('desktop', async ({ page }) => {
   await page.waitForTimeout(500);
   await page.screenshot({ path: `${OUT}web-intro.png` });
   await running(page);
-  await page.getByRole('radio', { name: 'Image statistics' }).check();
   await page.waitForTimeout(3000);
   await page.screenshot({ path: `${OUT}web-compare.png` });
   await page.getByRole('radio', { name: 'Chrome ball' }).check();

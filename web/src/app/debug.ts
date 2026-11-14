@@ -61,8 +61,16 @@ function brightSide(frame: FrameSample | null): number {
   return Math.abs(d) < 0.02 ? 0 : Math.sign(d);
 }
 
+export interface NeuralCapture {
+  /** RGBA bytes of the 128 x 96 frame the network saw. */
+  rgba: number[];
+  /** The network's raw output for that frame (sensor frame, unfiltered). */
+  sh: number[][];
+}
+
 export interface LuminaDebug {
   state: () => LuminaDebugState;
+  lastNeural: () => NeuralCapture | null;
   sampleObject: () => ObjectSample;
 }
 
@@ -141,5 +149,12 @@ function sampleObject(app: App): ObjectSample {
 
 export function attachDebug(app: App): void {
   if (!new URLSearchParams(location.search).has('debug')) return;
-  window.__lumina = { state: () => state(app), sampleObject: () => sampleObject(app) };
+  window.__lumina = {
+    state: () => state(app),
+    sampleObject: () => sampleObject(app),
+    lastNeural: () => {
+      const n = app.pipeline.lastNeural;
+      return n === null ? null : { rgba: Array.from(n.rgba), sh: n.sh };
+    },
+  };
 }

@@ -74,10 +74,17 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
       - run: npx playwright install --with-deps --only-shell chromium
+      # truth.spec.ts converts the sample clip with ffmpeg and runs Python onnxruntime through uv.
+      - run: sudo apt-get install -y --no-install-recommends ffmpeg
+        working-directory: .
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.11.0'
       # Dev server: three.js parity, ONNX smoke, shading measurements, the app with a generated
       # Y4M fake camera, and the SwiftShader performance probe (prints PERF lines).
       - run: npm run e2e
-      # Production build served under /lumina/ by a Pages-like static server (no COOP/COEP).
+      # Production build served under /lumina/ by a Pages-like static server (no COOP/COEP), plus
+      # the truth test (fake camera playing a clip with known lighting, compared with Python).
       - run: npm run e2e:dist
 
   pages:

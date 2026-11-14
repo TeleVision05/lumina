@@ -125,10 +125,9 @@ without at half scale; `backdrop-filter` over the video took the frame interval 
 
 `cd web && npx playwright test e2e/perf.spec.ts` (software) and
 `LUMINA_GPU=1 npx playwright test e2e/perf.spec.ts` (GPU-backed headless, no window). Inference is
-the worker's `session.run` time for the 43,935-byte placeholder model; the table below was
-measured with that placeholder, not the trained model now shipped (6.4 MB). With the trained
-model, a headless software-rendering e2e run printed an inference median of about 10 ms (WASM,
-2026-11-13; `npm run perf` output, not re-tabulated here). Frame values are medians with p95 over about the last 2 s, after 8 s per view.
+the worker's `session.run` time. The table below was measured with the 43,935-byte placeholder
+model, before the trained model (6.4 MB) shipped; the lines after it were measured with the trained
+model. Frame values are medians with p95 over about the last 2 s, after 8 s per view.
 
 | Run (load average at start)      | View        | Inference median / p95 | Inferences per second | Frame interval median / p95 | Main-thread work median / p95 |
 | -------------------------------- | ----------- | ---------------------- | --------------------- | --------------------------- | ----------------------------- |
@@ -147,10 +146,23 @@ GPU renderer string: `ANGLE (Apple, ANGLE Metal Renderer: Apple M2 Max)`; softwa
 same day at lower load reached 11.0 to 11.8 inferences per second in the Lumina view, which shows
 how much the software numbers depend on what else the machine is doing.
 
-Reading it: the placeholder network is so small that WebGPU's dispatch overhead makes it slower
-than WASM; re-measure with the trained model before choosing a default. In the compare view under
-software rendering, GPU-process stalls also delay timers, so the inference rate drops below the
-12 Hz target; on the GPU it holds at about 11 per second.
+Trained model (6,439,046 bytes), 2026-11-13, M2 Max, load average about 30, `npx playwright test
+e2e/perf.spec.ts` (software) and `LUMINA_GPU=1 npx playwright test e2e/perf.spec.ts` (Metal GPU,
+headless, no window):
+
+| Run                                | View        | Inference median / p95 | Inferences per second | Frame interval median / p95 |
+| ---------------------------------- | ----------- | ---------------------- | --------------------- | --------------------------- |
+| SwiftShader WebGL, WASM inference  | Lumina      | 4.30 / 5.00 ms         | 12.5                  | 16.6 / 50.3 ms              |
+|                                    | Compare     | 4.20 / 4.40 ms         | 12.4                  | 15.7 / 69.2 ms              |
+|                                    | Chrome ball | 4.20 / 4.40 ms         | 11.8                  | 16.7 / 17.6 ms              |
+| Metal GPU, WebGPU inference        | Lumina      | 5.80 / 6.70 ms         | 12.5                  | 16.6 / 17.4 ms              |
+|                                    | Compare     | 5.80 / 6.20 ms         | 12.5                  | 16.7 / 17.2 ms              |
+|                                    | Chrome ball | 5.20 / 7.90 ms         | 12.5                  | 16.7 / 17.6 ms              |
+
+For the trained model WASM is not slower than WebGPU (4.2 vs 5.8 ms median): at this size
+dispatch overhead dominates, so the WebGPU default is kept only because it frees the main
+thread's worker on slow CPUs (UNVERIFIED: not measured on a slow CPU). In the compare view under
+software rendering, GPU-process stalls delay timers; on the GPU the rate holds at 12.5 per second.
 
 ## Tests
 
@@ -162,6 +174,14 @@ software rendering, GPU-process stalls also delay timers, so the inference rate 
 | `LUMINA_SCREENSHOTS=1 npx playwright test e2e/screenshots.spec.ts` | Rewrites `docs/media/web-*.png`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 The fake camera reports no `facingMode`, like a laptop webcam, so it is shown mirrored.
+
+`e2e/truth.spec.ts` (runs only under `npm run e2e:dist`; needs `ffmpeg` and `uv` on PATH) converts
+`samples/rotate-environment.mp4` to a Y4M fake camera, records every network result in the page for
+16 s, and checks the frames against an ffmpeg resize, the output against Python onnxruntime
+(`scripts/ort_reference.py`) and the estimated light azimuth, its lag and the probe ball against the
+clip's per-frame truth. See the README for the measured numbers. `e2e/record.spec.ts` records the
+demo video (`LUMINA_RECORD=out.webm LUMINA_CLIP=<name> LUMINA_GPU=1 npx playwright test
+e2e/record.spec.ts`).
 
 ## Dropping in the trained model
 

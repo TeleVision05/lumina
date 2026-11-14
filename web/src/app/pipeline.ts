@@ -25,6 +25,8 @@ export class LightingPipeline {
   /** Which estimator produced the current raw estimate. */
   activeId: EstimatorId | null = null;
   lastFrame: FrameSample | null = null;
+  /** The last frame the network saw and the raw (unfiltered, sensor-frame) SH it returned. */
+  lastNeural: { rgba: Uint8ClampedArray; sh: number[][] } | null = null;
   readonly inferenceMs = new Rolling(120);
   inferenceCount = 0;
   private readonly gate = new RateGate();
@@ -76,6 +78,7 @@ export class LightingPipeline {
     this.inferenceMs.push(ms, done);
     this.inferenceCount++;
     this.raw = e;
+    if (est === this.neural) this.lastNeural = { rgba: frame.rgba, sh: e.sh.map((c) => [...c]) };
     this.rawDisplayFrame = est.displayFrame;
     this.activeId = est.id;
   }
@@ -106,6 +109,7 @@ export class LightingPipeline {
     this.filter.reset();
     this.inferenceMs.clear();
     this.lastFrame = null;
+    this.lastNeural = null;
   }
 
   dispose(): void {
