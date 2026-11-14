@@ -89,6 +89,12 @@ Paired comparison (per-HDRI difference CNN minus baseline, 95 % bootstrap CI, `d
 
 ## Limits
 
+- The model gets some scenes wrong: in `docs/media/web-compare.png`, a plain synthetic room whose
+  lamp is at the upper left, Lumina reports the light as coming from behind the object and shades
+  the ball dark on the right.
+- The shipped `lumina-sh.onnx` hash (`2abf0185...`) is not reproducible across machines: re-running
+  the export elsewhere gave a file of different size and sha256 (serialisation differs with the
+  toolchain version) whose weights and outputs were identical (checked by the independent review).
 - Every number above is on synthetic camera crops of HDRIs. **Accuracy on real webcams has not been
   measured**; there is no real-photo test set with ground-truth lighting.
 - Estimates are relative to the frame's exposure: absolute brightness is not recoverable.
