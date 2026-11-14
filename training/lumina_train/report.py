@@ -384,20 +384,31 @@ def read_this_first(results: dict[str, Any]) -> str:
             f"| {k} | {spread['std_label_per_coef'][k]:.2f} | "
             f"{spread['std_pred_per_coef'][k]:.2f} | {corr[k]:.2f} |"
         )
+    meta = json.loads(MODEL_META_PATH.read_text())["training"]
+    rule = meta.get("checkpoint_rule", "selection rule not recorded")
+    little = ratio < 0.05
+    spread_text = (
+        "- **The network's output varies little compared with the labels.** On the 1,545 test "
+        f"crops the total variance of its predicted SH coefficients is {ratio * 100:.3f} % of the "
+        f"label variance, the per-coefficient correlation with the truth is {min(corr):.2f} to "
+        f"{max(corr):.2f}, and R2 against the label mean is {spread['r2_vs_label_mean']:.3f} "
+        "(0 means no better than always answering the average). "
+        + (
+            "In the demo this means the lighting it applies stays close to a fixed average that "
+            "shifts with brightness and colour cast; it captures only a small part of the "
+            "structure of the room's light. "
+            if little
+            else ""
+        )
+        + "The direction signal is enough to follow a light sweeping round, not to place it "
+        "accurately.\n"
+    )
     return (
         "## Read this first\n\n"
-        "- **The shipped weights are an early snapshot**: the EMA weights at step 2000 of a "
-        "50,000-step schedule (see Training below), not a converged model.\n"
-        "- **The network's output barely varies.** On the 1,545 test crops the total variance of "
-        f"its predicted SH coefficients is {ratio * 100:.3f} % of the label variance, the "
-        f"per-coefficient correlation with the truth is {min(corr):.2f} to {max(corr):.2f}, and "
-        f"R2 against the label mean is {spread['r2_vs_label_mean']:.3f} (0 means no better than "
-        "always answering the average). In the demo this means the lighting it applies is close "
-        "to a fixed average that shifts a little with brightness and colour cast; it does not "
-        "reconstruct the structure of the room's light. The small direction signal that exists "
-        "is enough to follow a light sweeping round, not to place it accurately.\n"
-        "- **Everything here is on synthetic crops of CC0 panoramas.** Accuracy on real webcams "
-        "has not been measured.\n\n" + "\n".join(rows) + "\n\n"
+        f"- **Which weights**: {rule}. See Training below.\n"
+        + spread_text
+        + "- **Everything here is on synthetic crops of CC0 panoramas.** Accuracy on real "
+        "webcams has not been measured.\n\n" + "\n".join(rows) + "\n\n"
         "Rows are the SH basis order of docs/CONVENTIONS.md; std is over the test crops, mean "
         "over RGB; correlation is over the test crops for the green channel. Produced by "
         "`output_spread` in `training/lumina_train/evaluate.py`.\n\n"

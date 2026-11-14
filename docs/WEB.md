@@ -146,20 +146,20 @@ GPU renderer string: `ANGLE (Apple, ANGLE Metal Renderer: Apple M2 Max)`; softwa
 same day at lower load reached 11.0 to 11.8 inferences per second in the Lumina view, which shows
 how much the software numbers depend on what else the machine is doing.
 
-Trained model (6,439,046 bytes), 2026-11-13, M2 Max, load average about 30, `npx playwright test
+Step-29,000 model (6,436,208 bytes), 2026-11-14, M2 Max, load average about 8, `npx playwright test
 e2e/perf.spec.ts` (software) and `LUMINA_GPU=1 npx playwright test e2e/perf.spec.ts` (Metal GPU,
 headless, no window):
 
 | Run                                | View        | Inference median / p95 | Inferences per second | Frame interval median / p95 |
 | ---------------------------------- | ----------- | ---------------------- | --------------------- | --------------------------- |
-| SwiftShader WebGL, WASM inference  | Lumina      | 4.30 / 5.00 ms         | 12.5                  | 16.6 / 50.3 ms              |
-|                                    | Compare     | 4.20 / 4.40 ms         | 12.4                  | 15.7 / 69.2 ms              |
-|                                    | Chrome ball | 4.20 / 4.40 ms         | 11.8                  | 16.7 / 17.6 ms              |
-| Metal GPU, WebGPU inference        | Lumina      | 5.80 / 6.70 ms         | 12.5                  | 16.6 / 17.4 ms              |
-|                                    | Compare     | 5.80 / 6.20 ms         | 12.5                  | 16.7 / 17.2 ms              |
-|                                    | Chrome ball | 5.20 / 7.90 ms         | 12.5                  | 16.7 / 17.6 ms              |
+| SwiftShader WebGL, WASM inference  | Lumina      | 4.40 / 5.00 ms         | 12.5                  | 16.7 / 17.6 ms              |
+|                                    | Compare     | 4.10 / 4.30 ms         | 12.4                  | 16.7 / 44.1 ms              |
+|                                    | Chrome ball | 4.10 / 4.30 ms         | 11.9                  | 16.7 / 53.3 ms              |
+| Metal GPU, WebGPU inference        | Lumina      | 7.10 / 8.80 ms         | 12.5                  | 16.7 / 17.6 ms              |
+|                                    | Compare     | 7.40 / 9.40 ms         | 12.5                  | 16.7 / 17.3 ms              |
+|                                    | Chrome ball | 5.50 / 8.40 ms         | 12.5                  | 16.7 / 17.5 ms              |
 
-For the trained model WASM is not slower than WebGPU (4.2 vs 5.8 ms median): at this size
+For the trained model WASM is not slower than WebGPU (4.1 to 4.4 vs 5.5 to 7.4 ms median): at this size
 dispatch overhead dominates, so the WebGPU default is kept only because it frees the main
 thread's worker on slow CPUs (UNVERIFIED: not measured on a slow CPU). In the compare view under
 software rendering, GPU-process stalls delay timers; on the GPU the rate holds at 12.5 per second.

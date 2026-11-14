@@ -182,8 +182,11 @@ function checkDirection(c: Ctx): void {
   console.log(
     `TRUTH direction: median error ${median(err).toFixed(1)} deg; azimuth agreement R=${same.toFixed(2)} (same sweep) vs ${opposite.toFixed(2)} (reversed)`,
   );
-  expect(same).toBeGreaterThan(0.3);
-  expect(same).toBeGreaterThan(opposite + 0.1);
+  // Thresholds for the step-29,000 model (observed over 10 runs: same 0.99, reversed 0.03 to 0.07,
+  // median error 8.7 to 9.4 deg). They were 0.3 and +0.1 for the earlier, much weaker model.
+  expect(same).toBeGreaterThan(0.9);
+  expect(same).toBeGreaterThan(opposite + 0.5);
+  expect(median(err)).toBeLessThan(20);
 }
 
 /** Mean |azimuth difference| between the filtered estimate and the raw output `lag` frames earlier. */
@@ -251,7 +254,7 @@ function checkProbe(c: Ctx): void {
   console.log(
     `TRUTH probe ball: bright side agrees with the true light side in ${(agreeTruth * 100).toFixed(0)}% of ${tru.length} samples`,
   );
-  expect(agreeTruth).toBeGreaterThan(0.6);
+  expect(agreeTruth).toBeGreaterThan(0.9);
 }
 
 test('estimate follows the true lighting on the rotating-environment clip', async ({ page }) => {

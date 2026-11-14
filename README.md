@@ -7,8 +7,7 @@ small convolutional network (1.59 M parameters, 6.4 MB) regresses nine spherical
 coefficients from a 96 x 128 frame. The network runs in your browser with onnxruntime-web, and
 three.js turns the coefficients into a LightProbe, a derived DirectionalLight and a shadow catcher,
 smoothed over time with a One Euro filter. Move a lamp and the object's shading, colour cast and
-shadow are meant to follow it. How well that works is measured below and is modest: the colour
-cast follows the scene, the light direction only weakly.
+shadow follow it. How well that works is measured below, on synthetic data only.
 
 [![Demo: fixed studio light on the left, Lumina on the right, over a panning clip with changing light (click for the 13 s video)](docs/media/lumina-demo.jpg)](docs/media/lumina-demo.mp4)
 
@@ -45,39 +44,45 @@ lumina_train.evaluate` (needs the HDRIs, see `docs/DATA.md`). The training/web c
 
 ## How well does it work
 
-**Honest summary: the shipped model is an early snapshot, only a modest improvement over simple
-baselines on average error, and its output barely varies from image to image.** The weights are
-the step-2000 snapshot (0.13 h on one laptop GPU) of a run launched for 50,000 steps; the launch
-command is recorded in `web/public/models/lumina-sh.json`, and `--steps 2000` would not reproduce
-the weights because the learning-rate schedule depends on it. All numbers are from
-`eval/results.json`, generated 2026-11-14, on 103 held-out Poly Haven HDRIs (1,545 synthetic
-crops), mean over HDRIs with 95 % bootstrap CIs over HDRIs. Lower is better. Full tables and
-failure cases: `docs/EVAL.md`.
+**Honest summary: on held-out synthetic data the shipped model beats every simple baseline on
+average error and finds the light direction to about 30 degrees, but the size of its predicted
+lighting is still far smaller than the true spread, and nothing here has been measured on a real
+webcam.** The weights are the step-29,000 checkpoint of a run launched with `--steps 50000` and
+stopped at about step 29,000 (1.84 h on one laptop GPU). It was chosen by the lowest validation
+sRGB RMSE among the three saved checkpoints (steps 2,000 / 10,000 / 29,000: 67.3 / 41.2 / 39.7), not
+by test results (the test set had only been scored with the earlier step-2,000 model). The launch command is recorded in
+`web/public/models/lumina-sh.json`; `--steps 29000` would not reproduce the weights because the
+learning-rate schedule depends on it. All numbers are from `eval/results.json`, generated
+2026-11-14, on 103 held-out Poly Haven HDRIs (1,545 synthetic crops), mean over HDRIs with 95 %
+bootstrap CIs over HDRIs. Lower is better. Full tables and failure cases: `docs/EVAL.md`. Test
+error (sRGB RMSE 37.1) is in line with validation (39.7), so the test set did not turn out worse
+than validation suggested.
 
-**The network's output barely varies.** On the test crops the variance of its predicted
-coefficients is 0.006 % of the label variance, and the per-coefficient correlation with the truth
-is 0.01 to 0.21 (R2 against always answering the average: -0.007). What the demo applies is
-therefore close to a fixed average lighting that shifts a little with brightness and colour cast;
-it does not reconstruct the structure of the room's light. The small direction signal is enough
-to follow a light sweeping round (see the truth test below), not to place it accurately.
+**Output spread.** On the test crops the variance of the predicted coefficients is 1.0 % of the
+label variance (9.6 % on the out-of-distribution set), the per-coefficient correlation with the
+truth is 0.06 to 0.43, and R2 against always answering the average is 0.014. The labels span a
+huge range (exposure-relative radiance), so the demo's lighting stays much closer to an average
+than the true lighting does, while still moving in the right direction and colour (the truth test
+below). The previous release, the step-2,000 snapshot, had 0.006 %, 0.01 to 0.21 and -0.007.
 
-| Method                                         | RMSE (linear)        | si-RMSE (linear)     | sRGB RMSE (8-bit levels) | Colour error (deg) | Direction error, directional scenes (deg) |
+| Method | RMSE (linear) | si-RMSE (linear) | sRGB RMSE (8-bit levels) | Colour error (deg) | Direction error, directional scenes (deg) |
 |---|---|---|---|---|---|
-| Lumina CNN | 1.061 [0.577, 1.841] | 0.583 [0.331, 0.988] | 61.9 [59.1, 64.7] | 13.0 [12.5, 13.6] | 53.2 [48.8, 57.6] |
+| Lumina CNN | 0.884 [0.411, 1.658] | 0.517 [0.222, 1.025] | 37.1 [33.6, 40.6] | 5.5 [4.9, 6.0] | 30.1 [26.3, 33.9] |
 | Training-set mean lighting | 1.405 [0.962, 2.148] | 0.673 [0.384, 1.141] | 99.7 [95.2, 104.2] | 18.9 [18.2, 19.5] | 53.1 [47.8, 58.3] |
 | Image-mean colour, ambient only | 1.099 [0.611, 1.885] | 0.613 [0.364, 1.012] | 70.5 [65.2, 75.5] | 8.7 [7.9, 9.6] | 90.0 (no direction) |
 | Image-mean colour + brightest-region direction | 1.157 [0.668, 1.943] | 0.939 [0.516, 1.638] | 109.5 [103.4, 115.3] | 8.7 [7.9, 9.6] | 79.9 [75.7, 84.2] |
 
+For comparison, the previous release (step-2,000 snapshot) scored 1.061 / 0.583 / 61.9 / 13.0 /
+53.2 on the same five columns.
+
 Paired comparison (per-HDRI difference CNN minus baseline, 95 % bootstrap CI, `docs/EVAL.md`):
 
-- On the test split the CNN is better than all three baselines on linear RMSE, si-RMSE and sRGB
-  RMSE (the whole CI is below zero).
-- Dominant-light direction: no clear difference from the training-set mean (53.2 against 53.1
-  degrees); clearly better than the brightest-region heuristic (79.9 degrees).
-- Plain image-mean colour has a **better colour error** than the CNN (8.7 against 13.0 degrees).
-- On 48 out-of-distribution ambientCG HDRIs: better than every baseline on linear RMSE and sRGB
-  RMSE, no clear difference from the training mean on si-RMSE, and **worse** than the training
-  mean on direction.
+- On the test split the CNN is better than all three baselines on linear RMSE, sRGB RMSE, colour
+  error and direction error (the whole CI is below zero). On si-RMSE it is better than the training
+  mean and the direction heuristic, with no clear difference from the plain image-mean colour.
+- On 48 out-of-distribution ambientCG HDRIs it is better than every baseline on every metric
+  (CNN RMSE 0.711 [0.488, 0.989], sRGB RMSE 42.9 against 86.8 for the training mean, direction
+  31.7 against 39.5 degrees).
 - Train/test leakage check: `snowy_forest` (train) vs `snowy_forest_path_01`/`_02` (test) are by
   different photographers and show different scenes, so they are not the same place; no result was
   excluded (`docs/EVAL.md`, limits).
@@ -89,35 +94,43 @@ Paired comparison (per-HDRI difference CNN minus baseline, 95 % bootstrap CI, `d
 - Estimates are relative to the frame's exposure: absolute brightness is not recoverable.
 - Nine spherical-harmonic coefficients are low frequency: hard shadows and sharp highlights are
   not represented.
-- Dominant-light direction is weak (about 53 degrees mean error on directional scenes).
-- Browser speed, measured with the shipped model (`npm run perf`, 2026-11-13, Apple M2 Max, load
-  average about 30 from other jobs, headless Chromium, synthetic camera at 12 inferences per second):
-  network inference 4.2 to 4.3 ms median (p95 4.4 to 5.0) on single-thread WASM with software
-  WebGL, and 5.2 to 5.8 ms median (p95 6.2 to 7.9) on WebGPU with the Metal GPU. Frame interval
-  16.7 ms on the GPU. Software rendering is much slower (frame interval p95 50 to 69 ms) and the app
-  lowers its render scale to cope. Other machines and real GPUs will differ. Details: `docs/WEB.md`.
+- Dominant-light direction is about 30 degrees off on average on directional scenes (synthetic
+  test); diffuse scenes have no meaningful direction (about 56 degrees).
+- Browser speed, measured with the shipped model (`npm run perf`, 2026-11-14, Apple M2 Max, load
+  average about 8, headless Chromium, synthetic camera at 12 inferences per second): network
+  inference 4.1 to 4.4 ms median (p95 4.3 to 5.0) on single-thread WASM with software WebGL, and
+  5.5 to 7.4 ms median (p95 8.4 to 9.4) on WebGPU with the Metal GPU. Frame interval 16.7 ms median
+  on both. Other machines and real GPUs will differ. Details: `docs/WEB.md`.
+- On the four bundled sample clips (`web/public/samples/*.json`, scored by the same model) the light
+  direction error is median 5.6 degrees on the sunny pan, 8.7 on the rotating-environment clip, 49.6
+  on the indoor pan and 125 on the diffuse pan (where a direction hardly exists); their mean sRGB
+  RMSE is 60 to 99 levels, higher than the 37 on the test crops, so a few clips are not
+  representative of the test average.
 
 ## Tests that prove it
 
 `web/e2e/truth.spec.ts` plays a sample clip with known lighting per frame as the fake camera in the
-production build and checks (ranges over at least nine runs on 2026-11-13 and 2026-11-14, one of them the independent reviewer's; run `npm run e2e:dist` to reproduce):
+production build and checks the following (ten runs on 2026-11-14 with the shipped model; run
+`npm run e2e:dist` to reproduce):
 
-- the 128 x 96 frames the network sees match an independent ffmpeg resize (median 3.5 levels of
+- the 128 x 96 frames the network sees match an independent ffmpeg resize (median 3.45 to 3.48 levels of
   255 apart), and the network's output in the browser equals Python onnxruntime on those very
-  frames (largest difference 2.4e-7, so preprocessing and graph agree with the Python side);
+  frames (largest difference 1.2e-6 to 1.4e-6 on coefficients up to 2.85);
 - as the environment turns 360 degrees, the estimated light azimuth sweeps the same way as the true
-  one (agreement 0.46 to 0.58 against 0.09 to 0.33 for the reversed sweep, median direction error 44 to 53
-  degrees over at least nine runs,
-  so it follows the light but is not accurate), the displayed estimate trails the network by about
-  80 to 250 ms, and the lit probe ball's bright side matches the estimated side in 100 % of samples and
-  the true side in 96 to 98 %.
+  one: agreement R = 0.99 in all ten runs against 0.03 to 0.07 for the reversed sweep, median
+  direction error 8.7 to 9.4 degrees; the displayed estimate trails the network by 0 clip frames
+  (search resolution 2 frames); the lit probe ball's bright side matches the estimated side in 97 to
+  100 % of samples and the true side in 99 to 100 %.
 
-The thresholds in `truth.spec.ts` (same-sweep agreement above 0.3 and above the reversed sweep by
-0.1; lag under 1.5 s) were set **after** observing runs, and the sample floor and frame-matching
-window were loosened once after a slow CI runner produced too few samples. They were mutation-checked
-by hand (not as committed tests): a constant, random or x-mirrored estimate, and pairing frames with
-the reversed truth, each make it fail. The margin is thin: the ranges above come from several runs on
-the author's laptop plus the reviewer's, and a loaded runner can land outside them.
+Thresholds: same-sweep agreement above 0.9 and above the reversed sweep by 0.5, median direction
+error under 20 degrees, probe agreement above 0.9 with both, lag under 1.5 s. They were set after
+observing runs, and tightened (never loosened) when the model changed: for the earlier, much weaker
+step-2,000 model they were 0.3, +0.1 and probe-vs-truth 0.6, with observed agreement of only 0.46 to
+0.58. Mutation checks, done by hand (not as committed tests), each fail the test: pairing frames with
+the reversed truth (R 0.05 vs 0.99), a constant estimate (R 0.20), and an x-mirrored estimate
+(R 0.04 vs 0.99). The clip is a render of a CC0 panorama from the test split, so this is
+still synthetic data. On the slow CI runner the number of network results per second is lower; the
+test therefore records until it has 150.
 
 ## Privacy
 

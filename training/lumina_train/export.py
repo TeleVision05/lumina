@@ -32,7 +32,7 @@ from lumina_train.paths import EVAL_DIR, MODEL_META_PATH, REPO_ROOT, RUNS_DIR
 from lumina_train.placeholder import export_onnx
 from lumina_train.train import CROPS_PER_GROUP, GROUPS
 
-MODEL_VERSION = "1.0.0"
+MODEL_VERSION = "1.1.0"
 FIXTURE_PATH = REPO_ROOT / "training" / "tests" / "fixtures" / "model_parity.npz"
 #: Maximum size the brief aims for.
 SIZE_BUDGET = 8 * 1024 * 1024
@@ -43,7 +43,16 @@ PARITY_RTOL = 1e-4
 #: suggests (at step 21000, 10 of 816 validation crops made 56 % of it, two crops of one HDRI
 #: alone about 36 %), so it rose after step 10000 while every sphere metric kept improving.
 #: Taking the end of the fixed schedule also avoids selecting on the validation set at all.
-CHECKPOINT_RULE = "EMA weights at the final step of the fixed schedule, no selection on validation"
+CHECKPOINT_RULE = (
+    "EMA weights of the step-29,000 checkpoint (last.pt) of a run launched with --steps 50000 and "
+    "stopped at about step 29,000; chosen by the lowest validation sRGB RMSE among the saved "
+    "checkpoints (steps 2,000, 10,000 and 29,000; 39.7 vs 41.2 vs 67.3), not by test-set results"
+)
+REPRODUCTION_NOTE = (
+    "Launch command of the run. The run was stopped at about step 29,000 before its 50,000-step "
+    "schedule finished, so the weights are the 29,000-step state of that schedule; --steps 29000 "
+    "would not reproduce them (the learning-rate schedule is set by --steps)."
+)
 
 
 def load_ema(run_dir: Path, name: str = "last.pt") -> tuple[LuminaNet, dict[str, Any]]:
@@ -144,6 +153,7 @@ def write_meta(
             "steps": rows[-1]["step"],
             "exported_step": int(ckpt["step"]),
             "checkpoint_rule": CHECKPOINT_RULE,
+            "reproduction_note": REPRODUCTION_NOTE,
             "batch": GROUPS * CROPS_PER_GROUP,
             "samples_seen": rows[-1]["step"] * GROUPS * CROPS_PER_GROUP,
             "device": "Apple M2 Max (MPS)",
