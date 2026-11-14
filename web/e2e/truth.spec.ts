@@ -53,46 +53,50 @@ interface Sample {
  * the app under software rendering): the frame, the raw output, the filtered direction and the
  * x of the lit probe ball's brightness centroid (-1 left edge, 1 right edge).
  */
-async function collect(page: Page, seconds: number): Promise<Sample[]> {
-  return page.evaluate(async (ms) => {
-    const dbg = window.__lumina;
-    if (dbg === undefined) throw new Error('debug handle missing');
-    const probe = document.getElementById('probe') as HTMLCanvasElement;
-    const probeX = (): number => {
-      const px = probe.getContext('2d')?.getImageData(0, 0, probe.width, probe.height).data;
-      if (px === undefined) return 0;
-      let sum = 0;
-      let wx = 0;
-      for (let y = 0; y < probe.height; y++) {
-        for (let x = 0; x < probe.width; x++) {
-          const k = (y * probe.width + x) * 4;
-          if ((px[k + 3] ?? 0) < 250) continue;
-          const l = (px[k] ?? 0) + (px[k + 1] ?? 0) + (px[k + 2] ?? 0);
-          sum += l;
-          wx += l * (((x + 0.5) / probe.width) * 2 - 1);
+async function collect(page: Page, maxSeconds: number, minSamples: number): Promise<Sample[]> {
+  return page.evaluate(
+    async ({ ms, min }) => {
+      const dbg = window.__lumina;
+      if (dbg === undefined) throw new Error('debug handle missing');
+      const probe = document.getElementById('probe') as HTMLCanvasElement;
+      const probeX = (): number => {
+        const px = probe.getContext('2d')?.getImageData(0, 0, probe.width, probe.height).data;
+        if (px === undefined) return 0;
+        let sum = 0;
+        let wx = 0;
+        for (let y = 0; y < probe.height; y++) {
+          for (let x = 0; x < probe.width; x++) {
+            const k = (y * probe.width + x) * 4;
+            if ((px[k + 3] ?? 0) < 250) continue;
+            const l = (px[k] ?? 0) + (px[k + 1] ?? 0) + (px[k + 2] ?? 0);
+            sum += l;
+            wx += l * (((x + 0.5) / probe.width) * 2 - 1);
+          }
         }
+        return sum > 0 ? wx / sum : 0;
+      };
+      const out: Sample[] = [];
+      let last = -1;
+      const start = performance.now();
+      const end = start + ms;
+      while (performance.now() < end && (out.length < min || performance.now() < start + 16_000)) {
+        const s = dbg.state();
+        const cap = dbg.lastNeural();
+        if (cap !== null && s.inferenceCount !== last) {
+          last = s.inferenceCount;
+          out.push({
+            capture: cap,
+            filtered: s.estimate?.direction ?? null,
+            probeBrightX: probeX(),
+            mirrored: s.mirrored === true,
+          });
+        }
+        await new Promise((r) => setTimeout(r, 20));
       }
-      return sum > 0 ? wx / sum : 0;
-    };
-    const out: Sample[] = [];
-    let last = -1;
-    const end = performance.now() + ms;
-    while (performance.now() < end) {
-      const s = dbg.state();
-      const cap = dbg.lastNeural();
-      if (cap !== null && s.inferenceCount !== last) {
-        last = s.inferenceCount;
-        out.push({
-          capture: cap,
-          filtered: s.estimate?.direction ?? null,
-          probeBrightX: probeX(),
-          mirrored: s.mirrored === true,
-        });
-      }
-      await new Promise((r) => setTimeout(r, 20));
-    }
-    return out;
-  }, seconds * 1000);
+      return out;
+    },
+    { ms: maxSeconds * 1000, min: minSamples },
+  );
 }
 
 function ortReference(samples: Sample[]): number[][][] {
@@ -254,7 +258,9 @@ test('estimate follows the true lighting on the rotating-environment clip', asyn
   test.setTimeout(180_000);
   const refs = referenceFrames();
   await startCamera(page);
-  const samples = await collect(page, 24);
+  // Record for at least 16 s and until 150 results (cap 90 s): the direction statistics are noisy
+  // and a slow runner gives few results per second, so collect more rather than loosen anything.
+  const samples = await collect(page, 90, 150);
   // Local runs give 150+ samples; a slow 2-core CI runner gives 40 to 60 (24 ms per inference).
   expect(samples.length).toBeGreaterThan(25);
   expect((await state(page)).placeholder).toBe(false);
