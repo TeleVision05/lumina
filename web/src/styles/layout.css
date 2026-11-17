@@ -396,9 +396,11 @@
   background: transparent;
 }
 
-/* In AR the browser composites the camera and the 3D scene itself: the page canvas, the video
-   and the comparison split would only cover it (and swallow taps). */
-[data-ar='webxr'] .scene,
+/* In AR, let taps pass through the 2D placement canvas so WebXR receives `select` events. */
+[data-ar='webxr'] .scene {
+  pointer-events: none;
+}
+
 [data-ar='webxr'] .media,
 [data-ar='webxr'] .split,
 [data-ar='webxr'] #view-group label:has(input[value='split']),
