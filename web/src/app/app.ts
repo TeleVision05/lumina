@@ -3,6 +3,9 @@
  * and runs the render loop. Each frame: maybe start an estimate, filter, update both light rigs,
  * render the chosen view, refresh the reading card.
  */
+import { detectArSupport, type ArSupport } from '../ar/capabilities';
+import { launchQuickLook } from '../ar/quicklook';
+import { WebXrArSession, type ArPlacementState } from '../ar/webxr';
 import { CaptureError, PROBLEM_COPY } from '../capture/captureErrors';
 import { MediaLoadError, openFile, openVideo, sampleClips, sampleUrl } from '../capture/media';
 import {
@@ -39,6 +42,9 @@ export class App {
   private readonly reading = new ReadingCard();
   private readonly intro: IntroView;
   private readonly update: (patch: Partial<Settings>) => void;
+  private arSupport: ArSupport = 'none';
+  private xrSession: WebXrArSession | null = null;
+  private arReturnToCamera = false;
   private lastFrame = 0;
   private seed = 0;
 
@@ -73,21 +79,25 @@ export class App {
       this.resize();
     });
     this.resize();
-    requestAnimationFrame(this.loop);
+    void this.initAr();
+    this.stage.renderer.setAnimationLoop(this.loop);
     // The estimator is polled on a timer, not per rendered frame, so a slow frame never delays
     // inference. The rate gate inside the pipeline keeps it at TARGET_HZ, one frame in flight.
     window.setInterval(() => {
-      if (this.source !== null) this.pipeline.tick(performance.now(), this.source);
+      if (this.xrSession === null && this.source !== null) {
+        this.pipeline.tick(performance.now(), this.source);
+      }
     }, 10);
   }
 
   private applySettings(s: Settings): void {
     this.settings = { ...s, split: this.settings.split };
     this.stage.setObject(s.object);
-    this.stage.ground.setTilt((s.tiltDeg * Math.PI) / 180);
+    if (this.xrSession === null) this.stage.ground.setTilt((s.tiltDeg * Math.PI) / 180);
     this.pipeline.selected = s.estimator;
     this.pipeline.setResponsiveness(s.responsiveness);
-    byId('split', HTMLDivElement).hidden = s.view !== 'split' || this.source === null;
+    byId('split', HTMLDivElement).hidden =
+      s.view !== 'split' || this.source === null || this.xrSession !== null;
     saveSettings(this.settings);
   }
 
@@ -221,26 +231,130 @@ export class App {
     this.update({ deviceTilt: result === 'on' });
   }
 
-  private loop = (): void => {
-    requestAnimationFrame(this.loop);
+  private async initAr(): Promise<void> {
+    this.arSupport = await detectArSupport();
+    if (this.arSupport === 'none') return;
+    const label = this.arSupport === 'webxr' ? 'Place in AR' : 'View in AR';
+    for (const id of ['start-ar', 'ar-action']) {
+      const btn = byId(id, HTMLButtonElement);
+      btn.textContent = label;
+      btn.hidden = false;
+      btn.addEventListener('click', () => {
+        void this.startAr();
+      });
+    }
+    byId('ar-exit', HTMLButtonElement).addEventListener('click', () => {
+      void this.xrSession?.end();
+    });
+  }
+
+  private async startAr(): Promise<void> {
+    if (this.arSupport === 'quicklook') {
+      try {
+        await launchQuickLook(this.stage.object.group, `lumina-${this.settings.object}.usdz`);
+      } catch (err) {
+        console.error('AR Quick Look failed', err);
+        showToast('Could not open AR Quick Look for this object.');
+      }
+      return;
+    }
+    if (this.arSupport !== 'webxr' || this.xrSession !== null) return;
+    const wasCamera = this.source?.kind === 'camera';
+    this.arReturnToCamera = wasCamera;
+    if (this.source !== null) {
+      this.source.stop();
+      this.source = null;
+      byId('media', HTMLDivElement).replaceChildren();
+    }
+    this.pipeline.reset();
+    try {
+      const appEl = byId('app', HTMLDivElement);
+      this.xrSession = await WebXrArSession.start({
+        stage: this.stage,
+        overlayRoot: appEl,
+        onStateChange: (st) => {
+          this.onXrStateChange(st);
+        },
+        onEnd: () => {
+          this.onXrEnd();
+        },
+      });
+      appEl.dataset.phase = 'running';
+      appEl.dataset.ar = 'webxr';
+      for (const id of ['reading', 'dock', 'ar-hud']) byId(id, HTMLElement).hidden = false;
+      byId('split', HTMLDivElement).hidden = true;
+      this.onXrStateChange({ tracking: false, placed: false });
+    } catch (err) {
+      console.error('WebXR AR failed', err);
+      this.report('AR floor tracking did not start', 'Check camera permission and ARCore support.');
+      if (wasCamera) {
+        this.arReturnToCamera = false;
+        void this.useCamera({ facing: 'environment' });
+      }
+    }
+  }
+
+  private onXrStateChange(st: ArPlacementState): void {
+    const status = byId('ar-status', HTMLSpanElement);
+    if (!st.tracking) status.textContent = 'Move your phone to find the floor';
+    else if (!st.placed) status.textContent = 'Tap the floor to place';
+    else status.textContent = 'Tap anywhere on the floor to move';
+  }
+
+  private onXrEnd(): void {
+    this.xrSession = null;
+    const appEl = byId('app', HTMLDivElement);
+    delete appEl.dataset.ar;
+    byId('ar-hud', HTMLDivElement).hidden = true;
+    this.stage.restoreFromXR(this.settings.tiltDeg);
+    if (this.arReturnToCamera) {
+      this.arReturnToCamera = false;
+      void this.useCamera({ facing: 'environment' });
+    } else if (this.source === null) {
+      this.stopSource();
+    }
+  }
+
+  private loop = (_time: number, frame?: XRFrame): void => {
     // performance.now(), not the rAF timestamp: headless and throttled browsers can hand out
     // rAF timestamps that do not track wall time.
     const now = performance.now();
     const interval = this.lastFrame > 0 ? now - this.lastFrame : 0;
     this.lastFrame = now;
-    const source = this.source;
-    if (source === null) return;
-    this.renderFrame(now, source);
+    if (this.xrSession !== null && frame !== undefined) {
+      this.renderXrFrame(now, frame);
+    } else if (this.source !== null) {
+      this.renderFrame(now, this.source);
+    } else {
+      return;
+    }
     const work = performance.now() - now;
     if (interval > 0) this.frameIntervals.push(interval, now);
     this.frameWork.push(work, now);
     this.stage.recordFrame(now, interval, work);
   };
 
-  /** Update both rigs and render. Exposed for the debug handle (tests read pixels after it). */
-  renderFrame(now: number, source: FrameSource): void {
+  private renderXrFrame(now: number, frame: XRFrame): void {
+    const xr = this.xrSession;
+    if (xr === null) return;
+    xr.step(frame);
+    this.pipeline.tickFrame(now, () => xr.grabCameraFrame(frame));
+    if (this.pipeline.latest === null) {
+      const probeEst = xr.getLightEstimate(frame);
+      if (probeEst !== null) this.pipeline.setExternalEstimate(probeEst);
+    }
+    const est = this.updateRigs(now, false);
+    const view = est === null ? 'fixed' : this.settings.view;
+    this.stage.renderXR(view);
+    this.updateReading(now, est);
+  }
+
+  private updateRigs(
+    now: number,
+    mirrored: boolean,
+  ): ReturnType<LightingPipeline['displayEstimate']> {
     const s = this.settings;
-    const est = this.pipeline.displayEstimate(now, source.mirrored);
+    const est = this.pipeline.displayEstimate(now, mirrored);
     const { center, radius } = this.stage.objectBounds();
     const base = {
       groundNormal: this.stage.ground.normal,
@@ -260,20 +374,17 @@ export class App {
               rgba: frame.rgba,
               width: frame.width,
               height: frame.height,
-              mirrored: source.mirrored,
+              mirrored,
               vfovDeg: 55,
               weight: 0.85,
             }
           : null;
       this.stage.luminaRig.update(est, { ...base, camera });
     }
-    if (!prefersReducedMotion()) this.seed = (this.seed + 0.6180339) % 1;
-    const view = est === null ? 'fixed' : s.view;
-    this.stage.render(view, this.settings.split, {
-      grain: s.grain * MAX_GRAIN,
-      blur: s.blur * MAX_BLUR,
-      seed: this.seed,
-    });
+    return est;
+  }
+
+  private updateReading(now: number, est: ReturnType<LightingPipeline['displayEstimate']>): void {
     this.reading.update(now, est, {
       inferenceMs: this.pipeline.inferenceMs.median,
       inferencePerSecond: this.pipeline.inferenceMs.rate(),
@@ -283,6 +394,20 @@ export class App {
         return m === null || m <= 0 ? null : 1000 / m;
       })(),
     });
+  }
+
+  /** Update both rigs and render. Exposed for the debug handle (tests read pixels after it). */
+  renderFrame(now: number, source: FrameSource): void {
+    const s = this.settings;
+    const est = this.updateRigs(now, source.mirrored);
+    if (!prefersReducedMotion()) this.seed = (this.seed + 0.6180339) % 1;
+    const view = est === null ? 'fixed' : s.view;
+    this.stage.render(view, this.settings.split, {
+      grain: s.grain * MAX_GRAIN,
+      blur: s.blur * MAX_BLUR,
+      seed: this.seed,
+    });
+    this.updateReading(now, est);
   }
 
   backendLabel(): string {

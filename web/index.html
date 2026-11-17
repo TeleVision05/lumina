@@ -66,6 +66,7 @@
           <button type="button" class="button button-primary" id="start-camera">
             Use my camera
           </button>
+          <button type="button" class="button" id="start-ar" hidden>Place in AR</button>
           <button type="button" class="button" id="start-sample">Play the sample clip</button>
           <label class="button" for="file-input">Open a photo or video</label>
           <input type="file" id="file-input" class="visually-hidden" accept="image/*,video/*" />
@@ -183,6 +184,7 @@
           >
         </fieldset>
         <div class="dock-actions">
+          <button type="button" class="icon-button" id="ar-action" hidden>Place in AR</button>
           <button type="button" class="icon-button" id="switch-camera" hidden>Switch camera</button>
           <button type="button" class="icon-button" id="change-source">Change source</button>
           <button
@@ -234,6 +236,13 @@
           ></label
         >
       </section>
+
+      <div class="ar-hud" id="ar-hud" hidden>
+        <span class="ar-status" id="ar-status" role="status" aria-live="polite"
+          >Move your phone to find the floor</span
+        >
+        <button type="button" class="icon-button" id="ar-exit">Exit AR</button>
+      </div>
 
       <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 

@@ -352,6 +352,40 @@
   gap: 6px;
 }
 
+.ar-hud {
+  position: absolute;
+  top: calc(60px + env(safe-area-inset-top));
+  left: var(--gutter);
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 14px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--shadow-panel);
+  font-size: var(--step--1);
+}
+
+.ar-hud:not([hidden]) {
+  display: flex;
+}
+
+.ar-status {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+[data-ar='webxr'] .stage {
+  background: transparent;
+}
+
+[data-ar='webxr'] .media,
+[data-ar='webxr'] .split,
+[data-ar='webxr'] #ar-action,
+[data-ar='webxr'] #switch-camera,
+[data-ar='webxr'] #change-source {
+  display: none;
+}
+
 @media (min-width: 760px) {
   .dock {
     left: 50%;

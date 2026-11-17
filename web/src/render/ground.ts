@@ -81,6 +81,14 @@ export class Ground {
     this.group.updateMatrixWorld(true);
   }
 
+  /** Place the ground horizontally at a world-space point (used by WebXR floor placement). */
+  setPose(position: Vector3): void {
+    this.tilt = 0;
+    this.group.rotation.set(0, 0, 0);
+    this.group.position.copy(position);
+    this.group.updateMatrixWorld(true);
+  }
+
   get tiltRad(): number {
     return this.tilt;
   }

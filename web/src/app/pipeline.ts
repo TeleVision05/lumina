@@ -64,10 +64,39 @@ export class LightingPipeline {
       });
   }
 
+  /** Feed an already-grabbed FrameSample (e.g. WebXR camera-access) through the estimator. */
+  tickFrame(nowMs: number, grabFrame: () => FrameSample | null): void {
+    if (!this.gate.tryStart(nowMs)) return;
+    const gen = this.generation;
+    const frame = grabFrame();
+    if (frame === null) {
+      this.gate.finish();
+      return;
+    }
+    this.estimateFrame(frame, gen)
+      .catch((err: unknown) => {
+        console.warn('estimate failed', err);
+      })
+      .finally(() => {
+        this.gate.finish();
+      });
+  }
+
+  /** Fallback when raw camera pixels are unavailable (e.g. WebXR light-estimation). */
+  setExternalEstimate(est: LightingEstimate): void {
+    this.raw = est;
+    this.rawDisplayFrame = true;
+    this.activeId = 'stats';
+  }
+
   private async run(source: FrameSource): Promise<void> {
     const gen = this.generation;
     const frame = await this.grabber.grab(source.element);
     if (frame === null || gen !== this.generation) return;
+    await this.estimateFrame(frame, gen);
+  }
+
+  private async estimateFrame(frame: FrameSample, gen: number): Promise<void> {
     this.lastFrame = frame;
     const est = this.current();
     const t0 = performance.now();

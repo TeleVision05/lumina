@@ -129,22 +129,37 @@ export class Stage {
   }
 
   private applyPlacement(): void {
+    if (this.renderer.xr.isPresenting) {
+      const s = this.object.group.scale.x || 0.45;
+      this.object.group.position.set(0, 0, 0);
+      this.object.group.scale.setScalar(s);
+      this.ground.placeContact(0, 0, this.object.radius * 2.8 * s, 0.32);
+      return;
+    }
     const { x, z, scale } = this.placement;
     this.object.group.position.set(x, 0, z);
     this.object.group.scale.setScalar(scale);
     this.ground.placeContact(x, z, this.object.radius * 2.8 * scale, 0.32);
   }
 
+  /** Restore the non-XR camera-frame ground tilt and placement after exiting WebXR. */
+  restoreFromXR(tiltDeg: number): void {
+    this.ground.setTilt((tiltDeg * Math.PI) / 180);
+    this.applyPlacement();
+  }
+
   /** Changes whenever anything that casts or receives the shadow changes. */
   sceneKey(): string {
-    const { x, z, scale } = this.placement;
-    return `${this.object.id}|${x.toFixed(3)},${z.toFixed(3)},${scale.toFixed(3)}|${this.ground.tiltRad.toFixed(4)}`;
+    const p = this.object.group.position;
+    const scale = this.object.group.scale.x;
+    return `${this.object.id}|${p.x.toFixed(3)},${p.z.toFixed(3)},${scale.toFixed(3)}|${this.ground.tiltRad.toFixed(4)}`;
   }
 
   /** World centre and radius of the object (for light rigs). */
   objectBounds(): { center: Vector3; radius: number } {
-    const { x, z, scale } = this.placement;
-    const center = this.ground.toWorld(x, this.object.centerHeight * scale, z);
+    const p = this.object.group.position;
+    const scale = this.object.group.scale.x;
+    const center = this.ground.toWorld(p.x, this.object.centerHeight * scale, p.z);
     return { center, radius: this.object.radius * scale };
   }
 
@@ -192,6 +207,18 @@ export class Stage {
       this.renderRig(this.luminaRig, this.fixedRig, cut, w - cut, h);
     }
     this.post.render(this.renderer, this.target.texture, w, h, post);
+  }
+
+  /** Direct WebXR render (bypasses the 2D post-processing target so stereo/XR projection works). */
+  renderXR(view: View): void {
+    const rig = view === 'fixed' ? this.fixedRig : this.luminaRig;
+    const other = view === 'fixed' ? this.luminaRig : this.fixedRig;
+    rig.visible = true;
+    other.visible = false;
+    this.ground.shadowMaterial.opacity = rig.shadow;
+    for (const m of this.object.envMaterials) m.envMap = rig.environment;
+    this.renderer.setRenderTarget(null);
+    this.renderer.render(this.scene, this.camera);
   }
 
   dispose(): void {
