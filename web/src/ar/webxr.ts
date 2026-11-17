@@ -5,21 +5,22 @@
  * - Live camera frame readback (`camera-access`) so Lumina's neural lighting estimator runs in AR,
  *   with WebXR `light-estimation` as fallback when raw camera access is unavailable.
  */
-import {
-  CircleGeometry,
-  Group,
-  Matrix4,
-  Mesh,
-  MeshBasicMaterial,
-  Quaternion,
-  RingGeometry,
-  Vector3,
-} from 'three';
+import { Quaternion, Vector3 } from 'three';
 import type { FrameSample } from '../capture/frame';
 import { makeEstimate, type LightingEstimate } from '../lighting/estimate';
 import type { Vec3 } from '../lighting/sh';
 import type { Stage } from '../render/stage';
 import { XrCameraGrabber } from './cameraGrab';
+import {
+  createReticle,
+  MIN_FLOOR_UP,
+  poseInfo,
+  rayFromPose,
+  rayHitsDisc,
+  rayHitsSphere,
+  RETICLE_TAP_RADIUS,
+  type Reticle,
+} from './placement';
 
 export interface ArPlacementState {
   tracking: boolean;
@@ -33,38 +34,6 @@ export interface WebXrOptions {
   onEnd: () => void;
 }
 
-const AR_DEFAULT_SCALE = 0.45;
-
-function createReticle(): { group: Group; dispose: () => void } {
-  const group = new Group();
-  const ringGeo = new RingGeometry(0.14, 0.175, 48).rotateX(-Math.PI / 2);
-  const dotGeo = new CircleGeometry(0.022, 24).rotateX(-Math.PI / 2);
-  const ringMat = new MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.9,
-    depthWrite: false,
-  });
-  const dotMat = new MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.95,
-    depthWrite: false,
-  });
-  group.add(new Mesh(ringGeo, ringMat), new Mesh(dotGeo, dotMat));
-  group.matrixAutoUpdate = false;
-  group.visible = false;
-  return {
-    group,
-    dispose: () => {
-      ringGeo.dispose();
-      dotGeo.dispose();
-      ringMat.dispose();
-      dotMat.dispose();
-    },
-  };
-}
-
 function estimateFromWebXrProbe(estimate: XRLightEstimate): LightingEstimate {
   const c = estimate.sphericalHarmonicsCoefficients;
   const sh: Vec3[] = [];
@@ -76,7 +45,7 @@ function estimateFromWebXrProbe(estimate: XRLightEstimate): LightingEstimate {
 }
 
 export class WebXrArSession {
-  private readonly reticle: { group: Group; dispose: () => void };
+  private readonly reticle: Reticle;
   private hitTestSource: XRHitTestSource | null = null;
   private binding: XRWebGLBinding | null = null;
   private grabber: XrCameraGrabber | null = null;
@@ -85,8 +54,6 @@ export class WebXrArSession {
   private lastTracking = false;
   private ended = false;
   private readonly tmpPos = new Vector3();
-  private readonly tmpQuat = new Quaternion();
-  private readonly tmpScale = new Vector3();
 
   private constructor(
     private readonly session: XRSession,
@@ -94,8 +61,7 @@ export class WebXrArSession {
   ) {
     this.reticle = createReticle();
     options.stage.scene.add(this.reticle.group);
-    options.stage.ground.group.visible = false;
-    options.stage.object.group.visible = false;
+    options.stage.setArMode(true);
 
     this.initFeatures();
     session.addEventListener('select', this.onSelect);
@@ -150,21 +116,34 @@ export class WebXrArSession {
     }
   }
 
-  private onSelect = (): void => {
-    this.placeAtReticle();
+  private onSelect = (e: XRInputSourceEvent): void => {
+    const refSpace = this.options.stage.renderer.xr.getReferenceSpace();
+    if (refSpace === null) return;
+    const rayPose = e.frame.getPose(e.inputSource.targetRaySpace, refSpace);
+    if (rayPose === undefined) return;
+    const ray = rayFromPose(rayPose.transform);
+
+    if (this.reticle.group.visible) {
+      const reticlePos = poseInfo(this.reticle.group.matrix.elements).position;
+      if (rayHitsDisc(ray, reticlePos, RETICLE_TAP_RADIUS)) {
+        this.placeAtReticle();
+        return;
+      }
+    }
+    if (this.placed) {
+      const { center, radius } = this.options.stage.objectBounds();
+      if (rayHitsSphere(ray, center, Math.max(radius * 1.4, 0.2))) {
+        this.unplace();
+      }
+    }
   };
 
   placeAtReticle(): boolean {
     if (!this.reticle.group.visible) return false;
-    const mat = new Matrix4().copy(this.reticle.group.matrix);
-    mat.decompose(this.tmpPos, this.tmpQuat, this.tmpScale);
+    this.tmpPos.copy(poseInfo(this.reticle.group.matrix.elements).position);
     const { stage } = this.options;
     stage.ground.setPose(this.tmpPos);
-    stage.object.group.position.set(0, 0, 0);
-    stage.object.group.scale.setScalar(AR_DEFAULT_SCALE);
-    stage.ground.placeContact(0, 0, stage.object.radius * 2.8 * AR_DEFAULT_SCALE, 0.32);
-    stage.ground.group.visible = true;
-    stage.object.group.visible = true;
+    stage.setObjectVisible(true);
     if (!this.placed) {
       this.placed = true;
       this.options.onStateChange({ tracking: this.lastTracking, placed: true });
@@ -172,20 +151,41 @@ export class WebXrArSession {
     return true;
   }
 
+  private unplace(): void {
+    if (!this.placed) return;
+    this.placed = false;
+    this.options.stage.setObjectVisible(false);
+    this.options.onStateChange({ tracking: this.lastTracking, placed: false });
+  }
+
   step(frame: XRFrame): void {
     const refSpace = this.options.stage.renderer.xr.getReferenceSpace();
     if (this.hitTestSource === null || refSpace === null) return;
     const hits = frame.getHitTestResults(this.hitTestSource);
-    const pose = hits[0]?.getPose(refSpace) ?? null;
-    const tracking = pose !== null;
-    if (pose !== null) {
-      this.reticle.group.matrix.fromArray(pose.transform.matrix);
+    let floorPose: XRPose | null = null;
+    for (const hit of hits) {
+      const pose = hit.getPose(refSpace);
+      if (pose !== undefined && poseInfo(pose.transform.matrix).up >= MIN_FLOOR_UP) {
+        floorPose = pose;
+        break;
+      }
+    }
+    const tracking = floorPose !== null;
+    if (floorPose !== null) {
+      this.reticle.group.matrix.fromArray(floorPose.transform.matrix);
     }
     this.reticle.group.visible = tracking;
     if (tracking !== this.lastTracking) {
       this.lastTracking = tracking;
       this.options.onStateChange({ tracking, placed: this.placed });
     }
+  }
+
+  cameraOrientation(frame: XRFrame): Quaternion | null {
+    const refSpace = this.options.stage.renderer.xr.getReferenceSpace();
+    if (refSpace === null) return null;
+    const o = frame.getViewerPose(refSpace)?.transform.orientation;
+    return o === undefined ? null : new Quaternion(o.x, o.y, o.z, o.w);
   }
 
   grabCameraFrame(frame: XRFrame): FrameSample | null {

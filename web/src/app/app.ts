@@ -3,9 +3,12 @@
  * and runs the render loop. Each frame: maybe start an estimate, filter, update both light rigs,
  * render the chosen view, refresh the reading card.
  */
+import type { Quaternion } from 'three';
 import { detectArSupport, type ArSupport } from '../ar/capabilities';
 import { launchQuickLook } from '../ar/quicklook';
 import { WebXrArSession, type ArPlacementState } from '../ar/webxr';
+import { makeEstimate } from '../lighting/estimate';
+import { rotateSH9 } from '../lighting/shRotate';
 import { CaptureError, PROBLEM_COPY } from '../capture/captureErrors';
 import { MediaLoadError, openFile, openVideo, sampleClips, sampleUrl } from '../capture/media';
 import {
@@ -23,6 +26,7 @@ import { bindControls } from '../ui/controls';
 import { bindHowItWorks } from '../ui/howItWorks';
 import { bindPlacement, bindSplit } from '../ui/interaction';
 import { bindIntro, type IntroView } from '../ui/intro';
+import { bindLayout } from '../ui/layout';
 import { ReadingCard } from '../ui/reading';
 import { startDeviceTilt, stopDeviceTilt } from '../ui/tilt';
 import { LightingPipeline } from './pipeline';
@@ -74,6 +78,7 @@ export class App {
     });
     bindPlacement(this.stage, () => undefined);
     bindHowItWorks();
+    bindLayout();
     this.applySettings(this.settings);
     window.addEventListener('resize', () => {
       this.resize();
@@ -297,8 +302,8 @@ export class App {
   private onXrStateChange(st: ArPlacementState): void {
     const status = byId('ar-status', HTMLSpanElement);
     if (!st.tracking) status.textContent = 'Move your phone to find the floor';
-    else if (!st.placed) status.textContent = 'Tap the floor to place';
-    else status.textContent = 'Tap anywhere on the floor to move';
+    else if (!st.placed) status.textContent = 'Tap the circle to place';
+    else status.textContent = 'Tap the circle to move, or the object to pick up';
   }
 
   private onXrEnd(): void {
@@ -339,11 +344,12 @@ export class App {
     if (xr === null) return;
     xr.step(frame);
     this.pipeline.tickFrame(now, () => xr.grabCameraFrame(frame));
-    if (this.pipeline.latest === null) {
+    if (this.pipeline.lastFrame === null) {
       const probeEst = xr.getLightEstimate(frame);
       if (probeEst !== null) this.pipeline.setExternalEstimate(probeEst);
     }
-    const est = this.updateRigs(now, false);
+    const worldRot = this.pipeline.lastFrame !== null ? xr.cameraOrientation(frame) : null;
+    const est = this.updateRigs(now, false, worldRot);
     const view = est === null ? 'fixed' : this.settings.view;
     this.stage.renderXR(view);
     this.updateReading(now, est);
@@ -352,6 +358,7 @@ export class App {
   private updateRigs(
     now: number,
     mirrored: boolean,
+    worldRot: Quaternion | null = null,
   ): ReturnType<LightingPipeline['displayEstimate']> {
     const s = this.settings;
     const est = this.pipeline.displayEstimate(now, mirrored);
@@ -368,8 +375,10 @@ export class App {
     this.stage.fixedRig.update(this.pipeline.studioEstimate, { ...base, camera: null });
     const frame = this.pipeline.lastFrame;
     if (est !== null) {
+      const rigEst =
+        worldRot !== null ? makeEstimate(rotateSH9(est.sh, worldRot), est.confidence) : est;
       const camera =
-        s.envFromCamera && frame !== null
+        worldRot === null && s.envFromCamera && frame !== null
           ? {
               rgba: frame.rgba,
               width: frame.width,
@@ -379,7 +388,7 @@ export class App {
               weight: 0.85,
             }
           : null;
-      this.stage.luminaRig.update(est, { ...base, camera });
+      this.stage.luminaRig.update(rigEst, { ...base, camera });
     }
     return est;
   }

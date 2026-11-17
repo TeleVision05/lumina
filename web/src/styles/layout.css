@@ -173,6 +173,20 @@
   box-shadow: var(--shadow-panel);
 }
 
+/* Short screens (small phones, landscape): no reference balls above the card (they would run
+   into the top bar), and the card scrolls instead of running off the top. */
+@media (max-height: 760px) {
+  .intro {
+    max-height: calc(100dvh - 100px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .intro-balls {
+    display: none;
+  }
+}
+
 [data-phase='running'] .intro {
   display: none;
 }
@@ -352,17 +366,21 @@
   gap: 6px;
 }
 
+/* AR status pill: centred just above the dock, close to where the reticle is. */
 .ar-hud {
   position: absolute;
-  top: calc(60px + env(safe-area-inset-top));
-  left: var(--gutter);
+  left: 50%;
+  bottom: calc(var(--dock-h, 120px) + 22px + env(safe-area-inset-bottom));
+  max-width: calc(100vw - 2 * var(--gutter));
   align-items: center;
   gap: 10px;
-  padding: 6px 8px 6px 14px;
+  padding: 6px 6px 6px 14px;
   border-radius: 999px;
   background: var(--card);
   box-shadow: var(--shadow-panel);
   font-size: var(--step--1);
+  transform: translateX(-50%);
+  z-index: 2;
 }
 
 .ar-hud:not([hidden]) {
@@ -378,11 +396,18 @@
   background: transparent;
 }
 
+/* In AR the browser composites the camera and the 3D scene itself: the page canvas, the video
+   and the comparison split would only cover it (and swallow taps). */
+[data-ar='webxr'] .scene,
 [data-ar='webxr'] .media,
 [data-ar='webxr'] .split,
+[data-ar='webxr'] #view-group label:has(input[value='split']),
 [data-ar='webxr'] #ar-action,
 [data-ar='webxr'] #switch-camera,
-[data-ar='webxr'] #change-source {
+[data-ar='webxr'] #change-source,
+[data-ar='webxr'] .settings .range:has(#set-tilt),
+[data-ar='webxr'] .settings .check:has(#set-device-tilt),
+[data-ar='webxr'] .settings .check:has(#set-env-camera) {
   display: none;
 }
 

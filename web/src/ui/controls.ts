@@ -3,6 +3,7 @@ import type { LuminaEstimator, Settings } from '../app/settings';
 import type { ObjectId } from '../render/objects';
 import type { View } from '../render/stage';
 import { byId, radioValue, setRadio } from './dom';
+import { isCompact } from './layout';
 
 export interface ControlHandlers {
   onChange: (s: Settings) => void;
@@ -22,10 +23,17 @@ const RANGES = [
 function bindSettingsPanel(): void {
   const toggle = byId('settings-toggle', HTMLButtonElement);
   const panel = byId('settings', HTMLElement);
+  const reading = byId('reading', HTMLElement);
+  const expand = byId('reading-expand', HTMLButtonElement);
   const setOpen = (open: boolean): void => {
     panel.hidden = !open;
     toggle.setAttribute('aria-expanded', String(open));
+    // On a compact screen there is no room for the reading details and the adjustments at once.
+    if (open && isCompact() && reading.classList.contains('is-open')) expand.click();
   };
+  expand.addEventListener('click', () => {
+    if (reading.classList.contains('is-open') && isCompact() && !panel.hidden) setOpen(false);
+  });
   toggle.addEventListener('click', () => {
     setOpen(panel.hidden !== false);
   });

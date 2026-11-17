@@ -41,6 +41,11 @@ export interface Placement {
 
 export const MIN_DISTANCE = 1.4;
 export const MAX_DISTANCE = 9;
+/**
+ * Object scale in AR. Scene units become metres there; the objects are about one unit tall, so
+ * 0.3 gives a 30 cm ball, a believable size to stand on a floor or a table.
+ */
+export const AR_OBJECT_SCALE = 0.3;
 
 /** Keep the object in front of the camera and within a sensible distance range. */
 export function clampPlacement(p: Placement): Placement {
@@ -65,6 +70,8 @@ export class Stage {
   private readonly post = new PostPass();
   private readonly raycaster = new Raycaster();
   private size = { width: 1, height: 1, dpr: 1 };
+  private arMode = false;
+  private objectVisible = true;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.renderer = new WebGLRenderer({
@@ -96,6 +103,8 @@ export class Stage {
   /** Viewport size in CSS pixels and the device pixel ratio (before the render scale). */
   resize(width: number, height: number, dpr: number): void {
     this.size = { width, height, dpr };
+    // three.js owns the drawing buffer size while an XR session presents.
+    if (this.renderer.xr.isPresenting) return;
     const ratio = dpr * this.governor.scale;
     this.renderer.setPixelRatio(ratio);
     this.renderer.setSize(width, height, false);
@@ -109,6 +118,7 @@ export class Stage {
 
   /** Feed one frame's timing to the resolution governor; re-sizes when the scale changes. */
   recordFrame(nowMs: number, intervalMs: number, workMs: number): void {
+    if (this.arMode) return;
     if (this.governor.record(nowMs, intervalMs, workMs) !== null) {
       this.resize(this.size.width, this.size.height, this.size.dpr);
     }
@@ -119,6 +129,7 @@ export class Stage {
     this.ground.group.remove(this.object.group);
     this.object.dispose();
     this.object = createObject(id);
+    this.object.group.visible = this.objectVisible;
     this.ground.group.add(this.object.group);
     this.applyPlacement();
   }
@@ -128,9 +139,26 @@ export class Stage {
     this.applyPlacement();
   }
 
+  /**
+   * AR mode: the ground follows the tracked floor (set by the WebXR session) and the object
+   * stands at the ground origin at a real-world size; it stays hidden until it is placed.
+   */
+  setArMode(on: boolean): void {
+    this.arMode = on;
+    this.setObjectVisible(!on);
+    if (!on) this.ground.setTilt(this.ground.tiltRad);
+    this.applyPlacement();
+  }
+
+  setObjectVisible(v: boolean): void {
+    this.objectVisible = v;
+    this.object.group.visible = v;
+    this.ground.group.visible = v;
+  }
+
   private applyPlacement(): void {
-    if (this.renderer.xr.isPresenting) {
-      const s = this.object.group.scale.x || 0.45;
+    if (this.arMode) {
+      const s = AR_OBJECT_SCALE;
       this.object.group.position.set(0, 0, 0);
       this.object.group.scale.setScalar(s);
       this.ground.placeContact(0, 0, this.object.radius * 2.8 * s, 0.32);
@@ -144,6 +172,7 @@ export class Stage {
 
   /** Restore the non-XR camera-frame ground tilt and placement after exiting WebXR. */
   restoreFromXR(tiltDeg: number): void {
+    this.setArMode(false);
     this.ground.setTilt((tiltDeg * Math.PI) / 180);
     this.applyPlacement();
   }
@@ -151,8 +180,15 @@ export class Stage {
   /** Changes whenever anything that casts or receives the shadow changes. */
   sceneKey(): string {
     const p = this.object.group.position;
+    const g = this.ground.group.position;
     const scale = this.object.group.scale.x;
-    return `${this.object.id}|${p.x.toFixed(3)},${p.z.toFixed(3)},${scale.toFixed(3)}|${this.ground.tiltRad.toFixed(4)}`;
+    const f = (v: number): string => v.toFixed(3);
+    return [
+      this.object.id,
+      `${f(p.x)},${f(p.z)},${f(scale)}`,
+      `${f(g.x)},${f(g.y)},${f(g.z)},${this.ground.tiltRad.toFixed(4)}`,
+      this.objectVisible ? 'v' : 'h',
+    ].join('|');
   }
 
   /** World centre and radius of the object (for light rigs). */
